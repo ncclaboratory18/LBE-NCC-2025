@@ -12,11 +12,19 @@
     + [Region (Lokasi Fisik Data Center)](#region-lokasi-fisik-data-center)
     + [Availability Zone (AZ)](#availability-zone-az)
     + [Edge Location](#edge-location)
-  + [Fitur Utama Microsoft Azure](#fitur-utama-dan-microsoft-azure)
+  + [Fitur Utama Microsoft Azure](#fitur-utama-microsoft-azure)
     + [Portal Azure](#portal-azure)
     + [Azure CLI](#azure-cli)
     + [Azure Resource Manager (ARM)](#azure-resource-manager-arm)
     + [Azure Marketplace](#azure-marketplace)
++ [Layanan Utama Microsoft Azure](#layanan-utama-microsoft-azure)
+    + [App Hosting and Compute](#app-hosting-and-compute)
+    + [Azure AI services](#azure-ai-services)
+    + [Data](#data)
+    + [Storage](#storage)
+    + [Messaging](#messaging)
+    + [Identity and Security](#identity-and-security)
+    + [Management](#management)
 
 ## Dasar-dasar Cloud Computing
 ### Pengertian Cloud
@@ -99,3 +107,67 @@ Azure Resource Manager (ARM) adalah layanan deployment dan manajemen di Azure ya
 
 #### Azure Marketplace
 Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untuk profesional TI dan pengembang. Melalui portal Azure atau situs web, pengguna dapat menemukan produk dan layanan, seperti konsultasi serta layanan terkelola yang dikategorikan berdasarkan area seperti analitik, jaringan, keamanan, dan database, sehingga memudahkan pencarian solusi sesuai kebutuhan organisasi.
+
+## Layanan Utama Microsoft Azure
+### App Hosting and Compute
+| **Layanan** | **Deskripsi** |
+|-------------|---------------|
+| Azure App Service | Host aplikasi web dan API .NET, Java, Node.js, dan Python menggunakan layanan Azure yang sepenuhnya dikelola. Anda hanya perlu men-deploy kode ke Azure, sementara Azure mengurus semua manajemen infrastruktur seperti high availability, load balancing, dan autoscaling. |
+| Azure Static Web Apps | Host aplikasi web statis yang dibangun menggunakan framework seperti Gatsby, Hugo, atau VuePress, atau aplikasi web modern menggunakan Angular, React, Svelte, atau Vue. Aplikasi web statis ini secara otomatis membangun dan men-deploy berdasarkan perubahan kode, serta memiliki integrasi API dengan Azure Functions. |
+| Azure Container Apps | Azure Container Apps memungkinkan pengguna menjalankan aplikasi berbasis container tanpa perlu mengkhawatirkan orkestrasi atau infrastruktur, melalui platform serverless. |
+| Azure Container Instances | Jalankan Docker container sesuai permintaan dalam lingkungan Azure yang dikelola dan serverless. Solusi ini cocok untuk skenario yang dapat berjalan di container terisolasi tanpa memerlukan orkestrasi. |
+| Azure Kubernetes Services | Cepat deploy cluster Kubernetes siap produksi ke cloud dan serahkan beban operasional ke Azure. Azure menangani tugas penting seperti monitoring kesehatan dan pemeliharaan, sementara pengguna hanya perlu mengelola agent nodes. |
+| Azure Virtual Machines | Hosting aplikasi menggunakan virtual machine di Azure ketika membutuhkan kontrol lebih besar atas lingkungan komputasi. Azure VMs menyediakan lingkungan komputasi yang fleksibel dan skalabel untuk Linux maupun Windows. |
+| Azure Functions | Platform komputasi serverless untuk membuat potongan kode kecil yang dapat dipicu oleh berbagai jenis event. Contoh penggunaan umum: membangun API serverless atau mengorkestrasi arsitektur berbasis event. |
+| Azure Spring Apps | Hosting aplikasi Spring Boot microservice di Azure tanpa perlu perubahan kode. Menyediakan fitur seperti monitoring, manajemen konfigurasi, service discovery, integrasi CI/CD, dan lainnya. |
+
+### Azure AI services
+| **Layanan** | **Deskripsi** |
+|-------------|---------------|
+|||
+|||
+|||
+|||
+|||
+|||
+|||
+
+### Data
+| **Layanan** | **Deskripsi** |
+|-------------|---------------|
+|||
+|||
+|||
+|||
+|||
+|||
+|||
+
+### Storage
+| **Layanan** | **Deskripsi** |
+|-------------|---------------|
+|||
+|||
+
+### Messaging
+| **Layanan** | **Deskripsi** |
+|-------------|---------------|
+|||
+|||
+|||
+
+### Identity and Security
+| **Layanan** | **Deskripsi** |
+|-------------|---------------|
+|||
+|||
+|||
+
+### Management
+| **Layanan** | **Deskripsi** |
+|-------------|---------------|
+|||
+|||
+|||
+
+
