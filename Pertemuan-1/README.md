@@ -12,6 +12,11 @@
     + [Region (Lokasi Fisik Data Center)](#region-lokasi-fisik-data-center)
     + [Availability Zone (AZ)](#availability-zone-az)
     + [Edge Location](#edge-location)
+  + [Fitur Utama Microsoft Azure](#fitur-utama-dan-microsoft-azure)
+    + [Portal Azure](#portal-azure)
+    + [Azure CLI](#azure-cli)
+    + [Azure Resource Manager (ARM)](#azure-resource-manager-arm)
+    + [Azure Marketplace](#azure-marketplace)
 
 ## Dasar-dasar Cloud Computing
 ### Pengertian Cloud
