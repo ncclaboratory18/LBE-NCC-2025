@@ -51,3 +51,19 @@ Tantangan Cloud Computing:
 
 ## Pengenalan Microsoft Azure
 Microsoft Azure adalah platform komputasi cloud. Azure menawarkan berbagai layanan cloud, termasuk komputasi, analitik, penyimpanan, jaringan, dan AI. Pelanggan dapat memilih dari berbagai layanan ini untuk mengembangkan dan menskalakan aplikasi baru, atau menjalankan aplikasi yang ada, di cloud. Azure membantu bisnis mengelola dan menyebarkan aplikasi secara global dengan mudah dan fleksibel.
+
+### Edge Locations dan Infrastruktur Azure
+#### Region (Lokasi Fisik Data Center)
+Sebuah region Azure terdiri dari satu atau lebih pusat data yang terhubung melalui jaringan berkapasitas tinggi, tahan terhadap gangguan, dan berlatensi rendah. Pusat data Azure umumnya berlokasi di dalam area metropolitan besar.
+Faktor Utama Memilih Region:
+- Latensi: Pilih region yang secara geografis dekat dengan pengguna untuk mengurangi latensi. Sebagai contoh, jika pengguna berada di Amerika Serikat, sebaiknya pilih region di Amerika Serikat atau Kanada.
+- Availability Zones: Pilih region yang mendukung availability zone untuk menyediakan redundansi dan isolasi gangguan. Pastikan Anda menyebarkan sumber daya di beberapa availability zone dalam region tersebut.
+- Residensi Data: Pastikan region yang dipilih berada dalam batasan residensi data yang disyaratkan oleh organisasi Anda.
+
+#### Availability Zone (AZ)
+Availability zone adalah sekumpulan pusat data independen yang memiliki daya, pendingin, dan koneksi jaringan yang terisolasi. Availability zone secara fisik terletak cukup berdekatan untuk menyediakan jaringan dengan latensi rendah, tetapi juga cukup berjauhan untuk memberikan isolasi gangguan dari hal-hal seperti badai atau pemadaman listrik lokal.
+<img width="907" height="540" alt="cross-region-replication" src="https://github.com/user-attachments/assets/3bd17a98-6796-4e2b-a6ac-b03623ac3e76" />
+
+#### Edge Location
+Edge Location adalah lokasi jaringan terdistribusi yang berfungsi sebagai titik akhir untuk mempercepat pengiriman konten kepada pengguna. Edge location biasanya digunakan oleh layanan Content Delivery Network (CDN) untuk menyimpan salinan sementara (cache) dari data atau aplikasi. Secara fisik, edge location ditempatkan dekat dengan wilayah pengguna akhir sehingga mampu mengurangi latensi akses, meningkatkan kecepatan respons, dan mengurangi beban pada pusat data utama (region).
+<img width="1200" height="675" alt="microsoft-global-wan" src="https://github.com/user-attachments/assets/63cf498a-acd9-40ac-ad49-6adfdc391ebd" />
