@@ -1,4 +1,18 @@
 # Pertemuan 1 LBE NCC 2024
+
+## Daftar Isi
++ [Dasar-dasar Cloud Computing](#dasar-dasar-cloud-computing)
+  + [Pengertian Cloud](#pengertian-cloud)
+  + [Perbandingan Dulu vs Sekarang](#perbandingan-dulu-vs-sekarang)
+  + [Model Layanan](#model-layanan)
+  + [Model Penyebaran](#model-penyebaran)
+  + [Keuntungan dan Tantangan](#keuntungan-dan-tantangan)
++ [Pengenalan Microsoft Azure](#pengenalan-microsoft-azure)
+  + [Edge Locations dan Infrastruktur Azure](#edge-locations-dan-infrastruktur-azure)
+    + [Region (Lokasi Fisik Data Center)](#region-lokasi-fisik-data-center)
+    + [Availability Zone (AZ)](#availability-zone-az)
+    + [Edge Location](#edge-location)
+
 ## Dasar-dasar Cloud Computing
 ### Pengertian Cloud
 Cloud merupakan simbol atau perumpamaan dari internet, sedangkan computing berarti pemrosesan menggunakan komputer. Jadi, cloud computing adalah penggunaan sumber daya komputasi (seperti server, storage, network, dsb.) melalui internet yang dilakukan secara on-demand (sesuai kebutuhan) dan tagihannya dibayarkan dengan harga sesuai pemakaian (pay-as-you-go).
