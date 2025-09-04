@@ -1,4 +1,4 @@
-# Pertemuan 1 LBE NCC 2024
+# Pertemuan 1 LBE NCC 2025
 
 ## Daftar Isi
 + [Dasar-dasar Cloud Computing](#dasar-dasar-cloud-computing)
@@ -81,3 +81,16 @@ Availability zone adalah sekumpulan pusat data independen yang memiliki daya, pe
 #### Edge Location
 Edge Location adalah lokasi jaringan terdistribusi yang berfungsi sebagai titik akhir untuk mempercepat pengiriman konten kepada pengguna. Edge location biasanya digunakan oleh layanan Content Delivery Network (CDN) untuk menyimpan salinan sementara (cache) dari data atau aplikasi. Secara fisik, edge location ditempatkan dekat dengan wilayah pengguna akhir sehingga mampu mengurangi latensi akses, meningkatkan kecepatan respons, dan mengurangi beban pada pusat data utama (region).
 <img width="1200" height="675" alt="microsoft-global-wan" src="https://github.com/user-attachments/assets/63cf498a-acd9-40ac-ad49-6adfdc391ebd" />
+
+### Fitur Utama Microsoft Azure
+#### Portal Azure
+Portal Azure adalah konsol berbasis web untuk membuat, mengelola, dan memantau semua sumber daya Azure melalui antarmuka grafis. Melalui portal ini, pengguna dapat mengatur database, menambah daya komputasi, memantau biaya, hingga membangun aplikasi dari sederhana hingga kompleks.
+
+#### Azure CLI
+Azure Command-Line Interface (CLI) adalah alat lintas platform berbasis terminal untuk mengelola sumber daya Azure. CLI dapat digunakan secara interaktif melalui shell (cmd, Bash, atau lainnya) maupun otomatis dengan menyusun perintah ke dalam skrip untuk menjalankan tugas berulang.
+
+#### Azure Resource Manager (ARM)
+Azure Resource Manager (ARM) adalah layanan deployment dan manajemen di Azure yang memungkinkan pengguna membuat, memperbarui, dan menghapus resource. ARM juga menyediakan fitur seperti access control, locks, dan tags untuk mengamankan serta mengorganisasi resource setelah deployment.
+
+#### Azure Marketplace
+Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untuk profesional TI dan pengembang. Melalui portal Azure atau situs web, pengguna dapat menemukan produk dan layanan, seperti konsultasi serta layanan terkelola yang dikategorikan berdasarkan area seperti analitik, jaringan, keamanan, dan database, sehingga memudahkan pencarian solusi sesuai kebutuhan organisasi.
