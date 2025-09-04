@@ -84,8 +84,8 @@ Microsoft Azure adalah platform komputasi cloud. Azure menawarkan berbagai layan
 Sebuah region Azure terdiri dari satu atau lebih pusat data yang terhubung melalui jaringan berkapasitas tinggi, tahan terhadap gangguan, dan berlatensi rendah. Pusat data Azure umumnya berlokasi di dalam area metropolitan besar.
 Faktor Utama Memilih Region:
 - Latensi: Pilih region yang secara geografis dekat dengan pengguna untuk mengurangi latensi. Sebagai contoh, jika pengguna berada di Amerika Serikat, sebaiknya pilih region di Amerika Serikat atau Kanada.
-- Availability Zones: Pilih region yang mendukung availability zone untuk menyediakan redundansi dan isolasi gangguan. Pastikan Anda menyebarkan sumber daya di beberapa availability zone dalam region tersebut.
-- Residensi Data: Pastikan region yang dipilih berada dalam batasan residensi data yang disyaratkan oleh organisasi Anda.
+- Availability Zones: Pilih region yang mendukung availability zone untuk menyediakan redundansi dan isolasi gangguan. Pastikan pengguna menyebarkan sumber daya di beberapa availability zone dalam region tersebut.
+- Residensi Data: Pastikan region yang dipilih berada dalam batasan residensi data yang disyaratkan oleh organisasi pengguna.
 
 #### Availability Zone (AZ)
 Availability zone adalah sekumpulan pusat data independen yang memiliki daya, pendingin, dan koneksi jaringan yang terisolasi. Availability zone secara fisik terletak cukup berdekatan untuk menyediakan jaringan dengan latensi rendah, tetapi juga cukup berjauhan untuk memberikan isolasi gangguan dari hal-hal seperti badai atau pemadaman listrik lokal.
@@ -112,7 +112,7 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 ### App Hosting and Compute
 | **Layanan** | **Deskripsi** |
 |-------------|---------------|
-| Azure App Service | Host aplikasi web dan API .NET, Java, Node.js, dan Python menggunakan layanan Azure yang sepenuhnya dikelola. Anda hanya perlu men-deploy kode ke Azure, sementara Azure mengurus semua manajemen infrastruktur seperti high availability, load balancing, dan autoscaling. |
+| Azure App Service | Host aplikasi web dan API .NET, Java, Node.js, dan Python menggunakan layanan Azure yang sepenuhnya dikelola. Pengguna hanya perlu men-deploy kode ke Azure, sementara Azure mengurus semua manajemen infrastruktur seperti high availability, load balancing, dan autoscaling. |
 | Azure Static Web Apps | Host aplikasi web statis yang dibangun menggunakan framework seperti Gatsby, Hugo, atau VuePress, atau aplikasi web modern menggunakan Angular, React, Svelte, atau Vue. Aplikasi web statis ini secara otomatis membangun dan men-deploy berdasarkan perubahan kode, serta memiliki integrasi API dengan Azure Functions. |
 | Azure Container Apps | Azure Container Apps memungkinkan pengguna menjalankan aplikasi berbasis container tanpa perlu mengkhawatirkan orkestrasi atau infrastruktur, melalui platform serverless. |
 | Azure Container Instances | Jalankan Docker container sesuai permintaan dalam lingkungan Azure yang dikelola dan serverless. Solusi ini cocok untuk skenario yang dapat berjalan di container terisolasi tanpa memerlukan orkestrasi. |
@@ -124,50 +124,47 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 ### Azure AI services
 | **Layanan** | **Deskripsi** |
 |-------------|---------------|
-|||
-|||
-|||
-|||
-|||
-|||
-|||
+| Azure OpenAI | Gunakan model bahasa canggih seperti GPT-3, Codex, dan Embeddings untuk generasi konten, ringkasan, pencarian semantik, dan terjemahan bahasa alami ke kode. |
+| Azure AI Speech | Mengubah ucapan menjadi teks yang dapat dibaca dan dicari, atau mengubah teks menjadi suara yang terdengar alami untuk antarmuka yang lebih interaktif. |
+| Azure AI Language | Memanfaatkan Natural Language Processing (NLP) untuk mengidentifikasi frasa penting dan melakukan analisis sentimen dari teks. |
+| Azure AI Translator | Menerjemahkan lebih dari 100 bahasa dan dialek. |
+| Azure AI Vision | Menganalisis konten dalam gambar dan video, seperti objek, wajah, atau teks. |
+| Azure AI Search | Layanan pencarian informasi skala besar untuk aplikasi pencarian tradisional maupun percakapan, dengan opsi keamanan, AI enrichment, dan vektorisasi. |
+| Azure AI Document Intelligence | Layanan ekstraksi dokumen yang memahami form dan struktur dokumen, memungkinkan ekstraksi teks dan struktur secara cepat. |
 
 ### Data
 | **Layanan** | **Deskripsi** |
 |-------------|---------------|
-|||
-|||
-|||
-|||
-|||
-|||
-|||
+| Azure SQL | Keluarga produk engine database SQL Server yang tersedia di cloud. |
+| Azure SQL Database | Versi SQL Server berbasis cloud yang sepenuhnya dikelola oleh Azure. |
+| Azure Cosmos DB | Layanan database PostgreSQL berbasis cloud yang sepenuhnya dikelola, menggunakan PostgreSQL Community Edition. |
+| Azure Database for PostgreSQL | Layanan database PostgreSQL berbasis cloud yang sepenuhnya dikelola, menggunakan PostgreSQL Community Edition. |
+| Azure Database for MySQL | Layanan database MySQL berbasis cloud yang sepenuhnya dikelola, menggunakan MySQL Community Edition. |
+| Azure Database for MariaDB | Layanan database MariaDB berbasis cloud yang sepenuhnya dikelola, menggunakan MariaDB Community Edition. |
+| Azure Cache for Redis | Cache data dan messaging broker yang aman, menyediakan akses data berlatensi rendah dan throughput tinggi untuk aplikasi. |
 
 ### Storage
 | **Layanan** | **Deskripsi** |
 |-------------|---------------|
-|||
-|||
+| Azure Blob Storage | Memungkinkan aplikasi pengguna menyimpan dan mengambil file di cloud. Layanan ini sangat skalabel untuk menyimpan data dalam jumlah besar, dan data disimpan secara redundan untuk memastikan high availability. |
+| Azure Data Lake Storage | Mendukung analitik big data dengan menyediakan penyimpanan yang skalabel dan hemat biaya untuk data terstruktur, semi-terstruktur, maupun tidak terstruktur. |
 
 ### Messaging
 | **Layanan** | **Deskripsi** |
 |-------------|---------------|
-|||
-|||
-|||
+| Azure Service Bus | Layanan message broker enterprise yang sepenuhnya dikelola, mendukung integrasi point-to-point dan publish-subscribe. Cocok untuk membangun aplikasi yang terdekomposisi, queue-based load leveling, atau memfasilitasi komunikasi antar microservices. |
+| Azure Event Hubs | Layanan yang sepenuhnya dikelola untuk menerima dan memproses aliran data besar dari website, aplikasi, atau perangkat. |
+| Azure Queue Storage | Layanan queue sederhana dan andal yang dapat menangani beban kerja besar untuk antrean pesan. |
 
 ### Identity and Security
 | **Layanan** | **Deskripsi** |
 |-------------|---------------|
-|||
-|||
-|||
+| Microsoft Entra ID | Mengelola identitas pengguna dan mengontrol akses ke aplikasi, data, dan sumber daya pengguna. |
+| Azure Key Vault | Menyimpan dan mengakses rahasia aplikasi seperti connection string dan API key dalam vault terenkripsi dengan akses terbatas, sehingga rahasia dan aplikasi pengguna tetap aman. |
+| App Configuration | Layanan cepat dan skalabel untuk mengelola pengaturan aplikasi dan feature flags secara terpusat. |
 
 ### Management
 | **Layanan** | **Deskripsi** |
 |-------------|---------------|
-|||
-|||
-|||
-
-
+| Azure Monitor | Solusi monitoring komprehensif untuk mengumpulkan, menganalisis, dan merespons data pemantauan dari lingkungan cloud maupun on-premises pengguna. |
+| Application Insights | itur dari Azure Monitor yang menyediakan Application Performance Management (APM) untuk meningkatkan performa, keandalan, dan kualitas aplikasi web yang sedang berjalan. |
