@@ -122,8 +122,10 @@ Pada tahap ini kita akan menyiapkan skema dan tabel-tabel yang diperlukan untuk 
 1. Hubungkan VM utama ke database cloud untuk mengeksekusi perintah SQL dengan menggunakan perintah berikut:
 
 ```
-psql -h ncc.postgres.database.azure.com -p 5432 -U ncc postgres
+psql -h <server-name>.postgres.database.azure.com -p 5432 -U <username> <database-name>
 ```
+<img width="771" height="227" alt="Screenshot 2025-09-08 214856" src="https://github.com/user-attachments/assets/47bb1efd-2c7d-4b14-bff9-dd1072e9e49b" />
+
 
 2. Setelah berhasil terhubung, jalankan perintah SQL berikut untuk membuat database dan tabel:
 
