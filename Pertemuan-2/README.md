@@ -112,4 +112,30 @@ Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama un
 5. Pilih `Private access (VNet Integration)` sebagai metode koneksi, lalu tentukan `Subnet` yang telah dibuat pada `Virtual Network`.
 6. Pilih `Review + Create` dan tekan tombol `Create`
 
+### Konfigurasi Skema dan Tabel Database
+
+Pada tahap ini kita akan menyiapkan skema dan tabel-tabel yang diperlukan untuk aplikasi. Ikuti langkah-langkah berikut:
+
+1. Hubungkan VM utama ke database cloud untuk mengeksekusi perintah SQL dengan menggunakan perintah berikut:
+
+```
+psql -h ncc.postgres.database.azure.com -p 5432 -U ncc postgres
+```
+
+2. Setelah berhasil terhubung, jalankan perintah SQL berikut untuk membuat database dan tabel:
+
+```
+CREATE DATABASE school;
+
+\c school;
+
+CREATE TABLE student (
+    sid VARCHAR(20),
+    sname VARCHAR(100),
+    uktstatus VARCHAR(15),
+    alamat VARCHAR(100),
+    email VARCHAR(100)
+);
+```
+
 ## Deploy Aplikasi
