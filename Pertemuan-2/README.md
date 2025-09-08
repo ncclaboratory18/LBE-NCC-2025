@@ -84,6 +84,15 @@ systemctl enable nginx
 systemctl start nginx
 ```
 
+### Membuat database berbasis cloud
+
+Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama untuk postgres:
+
+1. Klik `Azure Database for PostgreSQL flexible servers`, lalu pilih `Create`
+2. Isi nama server, region (posisi data center VM, pastikan sama dengan region VM), versi PostgreSQL, dan workload type (pilih Development untuk keperluan belajar).
+3. Selanjutnya untuk autentikasi dapat menggunakan PostgreSQL authentication only (menggunakan username dan password PostgreSQL), Microsoft Entra authentication only (menggunakan identitas Microsoft Entra (Azure AD)) ataupun keduanya, dalam contoh ini akan menggunakan `PostgreSQL authentication only`
+4. Pilih `Next : Networking >`
+
 ### Konfigurasi Jaringan
 
 ## Deploy Aplikasi
