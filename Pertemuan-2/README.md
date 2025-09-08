@@ -91,7 +91,7 @@ Kita perlu membuat sebuah subnet agar Virtual Machine (VM) dan database cloud be
 1. Klik `Virtual Networks`, lalu pilih virtual network yang digunakan oleh vm utama.
 2. Pilih menu `Subnets`, lalu tekan `+ Subnet`
 3. Biarkan semua konfigurasi pada pengaturan Default, lalu pada dropdown `Subnet Delegation` dan pilih `Microsoft.DBforPostgreSQL/flexibleServers`
-<img width="818" height="85" alt="Screenshot 2025-09-08 201249" src="https://github.com/user-attachments/assets/cba4f8b6-0dcd-4e68-84f3-46b83f814295" />
+   <img width="818" height="85" alt="Screenshot 2025-09-08 201249" src="https://github.com/user-attachments/assets/cba4f8b6-0dcd-4e68-84f3-46b83f814295" />
 
 4. Tekan tombol save
 
@@ -109,5 +109,7 @@ Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama un
 <img width="716" height="401" alt="Screenshot 2025-09-08 191547" src="https://github.com/user-attachments/assets/c1ccb85c-1129-4eb5-beae-97a7a7260fbc" />
 
 4. Pilih `Next : Networking >`
+5. Pilih `Private access (VNet Integration)` sebagai metode koneksi, lalu tentukan `Subnet` yang telah dibuat pada `Virtual Network`.
+6. Pilih `Review + Create` dan tekan tombol `Create`
 
 ## Deploy Aplikasi
