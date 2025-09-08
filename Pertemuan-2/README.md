@@ -84,6 +84,15 @@ systemctl enable nginx
 systemctl start nginx
 ```
 
+### Konfigurasi Jaringan
+
+Kita perlu membuat sebuah subnet agar Virtual Machine (VM) dan database cloud berada dalam jaringan yang sama, sehingga keduanya bisa saling terhubung dengan aman dan efisien. Dengan subnet ini, komunikasi antara VM dan database lebih cepat, terlindungi dari akses luar, dan memudahkan pengelolaan koneksi jaringan tanpa mengganggu layanan lain di Azure. Berikut langkah-langkahnya:
+
+1. Klik `Virtual Networks`, lalu pilih virtual network yang digunakan oleh vm utama.
+2. Pilih menu `Subnets`, lalu tekan `+ Subnet`
+3. Biarkan semua konfigurasi pada pengaturan Default, lalu pada dropdown `Subnet Delegation` dan pilih `Microsoft.DBforPostgreSQL/flexibleServers`
+4. Tekan tombol save
+
 ### Membuat database berbasis cloud
 
 Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama untuk postgres:
@@ -91,13 +100,12 @@ Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama un
 1. Klik `Azure Database for PostgreSQL flexible servers`, lalu pilih `Create`
 2. Isi nama server, region (posisi data center VM, pastikan sama dengan region VM), versi PostgreSQL, dan workload type (pilih Development untuk keperluan belajar).</br>
 
- <img width="1079" height="700" alt="Screenshot 2025-09-08 191527" src="https://github.com/user-attachments/assets/f542ac28-ea7c-40dd-b39a-b354e8e42cdc" />
+<img width="1079" height="700" alt="Screenshot 2025-09-08 191527" src="https://github.com/user-attachments/assets/f542ac28-ea7c-40dd-b39a-b354e8e42cdc" />
 
 3. Selanjutnya untuk autentikasi dapat menggunakan PostgreSQL authentication only (menggunakan username dan password PostgreSQL), Microsoft Entra authentication only (menggunakan identitas Microsoft Entra (Azure AD)) ataupun keduanya, dalam contoh ini akan menggunakan `PostgreSQL authentication only`.
 
 <img width="716" height="401" alt="Screenshot 2025-09-08 191547" src="https://github.com/user-attachments/assets/c1ccb85c-1129-4eb5-beae-97a7a7260fbc" />
 
 4. Pilih `Next : Networking >`
-### Konfigurasi Jaringan
 
 ## Deploy Aplikasi
