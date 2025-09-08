@@ -110,6 +110,9 @@ Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama un
 
 4. Pilih `Next : Networking >`
 5. Pilih `Private access (VNet Integration)` sebagai metode koneksi, lalu tentukan `Subnet` yang telah dibuat pada `Virtual Network`.
+
+<img width="709" height="477" alt="Screenshot 2025-09-08 203833" src="https://github.com/user-attachments/assets/6c7581cb-ac40-4807-9fa9-e78739d112d2" />
+
 6. Pilih `Review + Create` dan tekan tombol `Create`
 
 ## Deploy Aplikasi
