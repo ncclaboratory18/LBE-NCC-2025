@@ -4,6 +4,7 @@
 
 - [Network Service Azure](#network-service-azure)
 - [Membangun Infrastruktur Azure Sederhana](#membangun-infrastruktur-azure-sederhana)
+  - [Konfigurasi Jaringan](#konfigurasi-jaringan)
 - [Deploy Aplikasi](#deploy-aplikasi)
 
 ## Network Service Azure
@@ -71,5 +72,18 @@ Azure NAT Gateway menyederhanakan koneksi keluar-only ke internet dari Virtual N
 #### Container network observability
 
 ## Membangun Infrastruktur Azure Sederhana
+
+Buat Virtual Machine dengan langkah-langkah yang sama seperti pada modul sebelumnya. Tambahkan konfigurasi pada menu `Advanced` di bagian `Custom data and cloud-init` dengan skrip berikut:
+
+```
+#!/bin/bash
+apt-get update -y
+apt-get install -y nginx postgresql-client-16
+
+systemctl enable nginx
+systemctl start nginx
+```
+
+### Konfigurasi Jaringan
 
 ## Deploy Aplikasi
