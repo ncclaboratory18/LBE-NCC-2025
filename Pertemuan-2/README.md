@@ -4,8 +4,13 @@
 
 - [Network Service Azure](#network-service-azure)
 - [Membangun Infrastruktur Azure Sederhana](#membangun-infrastruktur-azure-sederhana)
+  - [Firewall](#firewall)
   - [Konfigurasi Jaringan](#konfigurasi-jaringan)
+  - [Membuat database berbasis cloud](#membuat-database-berbasis-cloud)
 - [Deploy Aplikasi](#deploy-aplikasi)
+  - [Konfigurasi Skema dan Tabel Database](#konfigurasi-skema-dan-tabel-database)
+  - [Port Forwarding pada NGINX](#port-forwarding-pada-nginx)
+  - [Menjalankan Aplikasi sebagai Layanan dengan Systemd](#menjalankan-aplikasi-sebagai-layanan-dengan-systemd)
 
 ## Network Service Azure
 
@@ -189,7 +194,7 @@ node ./index.js
 ### Menjalankan Aplikasi sebagai Layanan dengan Systemd
 Sebelumnya, kita perlu secara manual menjalankan aplikasi dengan command `node index.js` atau `npm start`. Namun, kita tidak mungkin dapat menjalankan server setiap saat. Oleh karena itu, kita perlu menjalankan aplikasi di latar belakang sebagai suatu layanan. Dengan demikian, aplikasi pada server dapat tetap berjalan dan dapat diakses kapanpun. Hal ini dapat dilakukan dengan mudah di linux dengan menggunakan `systemd`.
 1. Buat systemd file dengan `sudo nano /lib/systemd/system/server.service`, lalu isi sebagai berikut. Jangan lupa untuk mengubah `username` dan `path-to-project` sesuai dengan server masing-masing.
-```
+```R
 [Unit]
 Description=Server service
 After=network.target
