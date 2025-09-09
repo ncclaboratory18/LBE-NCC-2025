@@ -78,7 +78,7 @@ Buat Virtual Machine dengan langkah-langkah yang sama seperti pada modul sebelum
 ```
 #!/bin/bash
 apt-get update -y
-apt-get install -y nginx postgresql-client-16
+apt-get install -y nginx postgresql-client-16 nodejs npm
 
 systemctl enable nginx
 systemctl start nginx
@@ -179,7 +179,7 @@ server {
 }
 ```
 3. Aktifkan konfigurasi dengan membuat symbolic link di folder `/etc/nginx/sites-enabled` dengan command berikut.
-`sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/`
+```sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/```
 4. Restart Nginx dan jalankan aplikasi
 ```
 sudo systemctl restart nginx
