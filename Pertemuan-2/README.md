@@ -295,7 +295,7 @@ Pengamatan Jaringan Kontainer khusus digunakan untuk lingkungan Kubernetes (AKS)
 
 Setelah mengetahui berbagai macam layanan pada Azure, kita akan mencoba membuat infrastruktur Azure sederhana. Infrastruktur ini terdiri dari dua komponen utama:
 
-1. Web server yang ditempatkan di public subnet agar dapat diakses dari internet. Karena VM di Azure tidak otomatis mendapatkan public IP, kita perlu membuat Public IP secara terpisah untuk web server agar pengguna dapat mengaksesnya.
+1. Web server yang ditempatkan di public subnet agar dapat diakses dari internet. Karena VM di Azure tidak otomatis mendapatkan public IP DNS name, kita perlu membuat Public IP DNS name secara terpisah untuk web server agar pengguna dapat mengaksesnya lebih mudah.
 
 2. Database yang ditempatkan di private subnet, sehingga tidak dapat diakses langsung dari internet. Database hanya dapat diakses oleh VM tertentu, misalnya web server, melalui jaringan internal (VNet).
 
@@ -315,41 +315,34 @@ Struktur infrasturktur dapat lebih jelas dilihat pada ilustrasi berikut:<br>
 
 </center>
 
-### Firewall
-Saat membuat VM, secara default hanya port 22 (SSH) yang diizinkan untuk koneksi masuk. Agar aplikasi web dapat diakses publik, kita perlu membuka port 80 (HTTP) dan 443 (HTTPS). Ikuti langkah-langkah berikut:
-1. Masuk ke dashboard virtual machine yang sudah dibuat
-2. Pilih menu `Networking` -> `Network Settings`
-3. Klik `Create Port Rule` -> `Inbound Port Rule`
-
-<img width="1594" height="390" alt="image" src="https://github.com/user-attachments/assets/e61f29ed-759f-4f23-9aa8-48a3226934d2" />
-
-4. Ubah opsi `Service` menjadi HTTP, lalu isi kolom `Name` dengan http.
-
-<img width="571" height="756" alt="image" src="https://github.com/user-attachments/assets/b88ccd92-8f79-4711-bba2-05c9118e52b1" />
-
-5. Klik `Add` untuk menyimpan aturan firewall.
-
-### Konfigurasi Jaringan
+### Konfigurasi Awal
 
 #### Resource Group
 
-Sebelum membuat konfigurasi jaringan, kita perlu membuat resource group terlebih dahulu untuk menampung semua resources seperti VM, VNet, NSG, dan Public IP agar lebih mudah dikelola nantinya.
+Sebelum membuat konfigurasi jaringan, kita perlu membuat resource group terlebih dahulu untuk menampung semua resources seperti VM, VNet, NSG, dan Public IP DNS name agar lebih mudah dikelola nantinya.
 
 Pertama, cari resources group pada search bar atau menu bar
+1. Masuk ke `Resources Group`
 <img width="1263" height="1005" alt="image" src="https://github.com/user-attachments/assets/a6f6dfad-4fdc-4b30-bff3-d37333726212" />
-Kemudian, pilih create dan masukkan resource group name. Setelah itu, tekan tombol review + create.
+
+2. Klik `Create`, lalu masukkan nama Resource Group dan pilih Region yang paling dekat dengan lokasi client. Setelah itu, tekan tombol `Review + Create`.
+
 <img width="1381" height="720" alt="image" src="https://github.com/user-attachments/assets/9d674243-e3f5-4af5-9ba6-0c8a62fbbe27" />
 
 
 #### Network Security Group (NSG)
 
-Selanjutnya, buat Network Security Group (NSG) untuk mengatur lalu lintas jaringan masuk dan keluar. Karena nantinya kita akan memiliki 2 jenis subnet, yakni private dan public, maka NSG yang kita buat juga terdiri dari NSG private dan public.
+Selanjutnya, buat Network Security Group (NSG) untuk mengatur lalu lintas jaringan masuk dan keluar. Karena nantinya kita akan memiliki 2 jenis subnet, yakni private dan public, maka NSG yang kita buat juga terdiri dari NSG private dan public. Berikut adalah langkah-langkahnya:
 
+1. Masuk ke `Network security groups`
+2. Lalu klik `Create`
+3. Pilih `Resource Group` yang telah dibuat sebelumnya, lalu masukkan nama untuk resource yang akan dibuat.
 Pada contoh di bawah, kita membuat NSG untuk subnet public.
 
 <img width="1402" height="747" alt="image" src="https://github.com/user-attachments/assets/f0ecabbf-1226-45dc-b4aa-212e16f4a15f" />
 
-Lakukan hal yang sama untuk NSG subnet private.
+4. Setelah itu, tekan tombol `Review + Create`.
+5. Lakukan hal yang sama untuk NSG subnet private.
 
 #### Virtual Networks (VNet)
 
