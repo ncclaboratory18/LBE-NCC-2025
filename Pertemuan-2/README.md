@@ -7,7 +7,7 @@
    - [Penyeimbangan Beban dan Pengiriman Konten](#penyeimbangan-beban-dan-pengiriman-konten)
    - [Konektivitas Hibrid](#konektivitas-hibrid)
    - [Keamanan Jaringan](#keamanan-jaringan)
-   - [Manajemen & Pemantauan](#manajemen-&-pemantauan)
+   - [Manajemen dan Pemantauan Jaringan](#manajemen-dan-pemantauan-jaringan)
 2. [Membangun Infrastruktur Azure Sederhana](#membangun-infrastruktur-azure-sederhana)
    - [Konfigurasi Jaringan](#konfigurasi-jaringan)
    - [Web Server](#web-server)
@@ -292,143 +292,188 @@ Pengamatan Jaringan Kontainer khusus digunakan untuk lingkungan Kubernetes (AKS)
 
 ## Membangun Infrastruktur Azure Sederhana
 
-Setelah mengetahui berbagai macam layanan pada Azure, kita akan mencoba membuat infrastruktur Azure sederhana. Infrastruktur ini terdiri dari web server yang berada di public subnet dan database yang berada di private subnet. Karena di Azure tidak terdapat auto assign public IP, maka untuk web servernya kita harus membuatkan public IP sendiri. Kemudian, agar database dapat diakses oleh web server, kita akan mengatur lalu lintas jaringan antara public subnet dengan private subnet pada network security group agar hak akses masing-masing resources sesuai dengan yang dibutuhkan. Struktur infrasturktur dapat lebih jelas dilihat pada ilustrasi berikut:<br>
+Setelah mengetahui berbagai macam layanan pada Azure, kita akan mencoba membuat infrastruktur Azure sederhana. Infrastruktur ini terdiri dari dua komponen utama:
+
+1. Web server yang ditempatkan di public subnet agar dapat diakses dari internet. Karena VM di Azure tidak otomatis mendapatkan public IP, kita perlu membuat Public IP secara terpisah untuk web server agar pengguna dapat mengaksesnya.
+
+2. Database yang ditempatkan di private subnet, sehingga tidak dapat diakses langsung dari internet. Database hanya dapat diakses oleh VM tertentu, misalnya web server, melalui jaringan internal (VNet).
+
+Untuk mengatur hak akses masing-masing resource, kita menggunakan Network Security Group (NSG). NSG berfungsi sebagai firewall virtual yang mengatur traffic masuk dan keluar:
+
+- Dari internet ke public subnet hanya membuka port 80/443 agar web server dapat diakses.
+
+- Dari public subnet ke private subnet hanya mengizinkan web server mengakses database pada port tertentu, seperti port 5432 untuk PostgreSQL.
+
+Struktur infrasturktur dapat lebih jelas dilihat pada ilustrasi berikut:<br>
 
 <center>
+
 <img width="849" height="436" alt="v-net" src="https://github.com/user-attachments/assets/710e4439-d8f7-4f10-b36f-245738ca07fb" />
+
+<img width="2513" height="1486" alt="Screenshot 2025-09-08 044842" src="https://github.com/user-attachments/assets/bf83dc4a-6140-4a7a-bd93-0fa0526b37c9" />
+
 </center>
 
 ### Konfigurasi Jaringan
 
-#### VNet
+#### Resource Group
 
-Sebelum meluncurkan vm untuk web server dan Azure Database, kita perlu membuat vnet beserta subnet yang diperlukan. Hal tersebut dapat dilakukan dengan mengakses virtual networks dashboard pada Azure console. Selanjutnya, anda dapat menekan tombol "Create" seperti pada gambar berikut:<br>
+Sebelum membuat konfigurasi jaringan, kita perlu membuat resource group terlebih dahulu untuk menampung semua resources seperti VM, VNet, NSG, dan Public IP agar lebih mudah dikelola nantinya.
 
-<center>
+Pertama, cari resources group pada search bar atau menu bar
+<img width="1263" height="1005" alt="image" src="https://github.com/user-attachments/assets/a6f6dfad-4fdc-4b30-bff3-d37333726212" />
+Kemudian, pilih create dan masukkan resource group name. Setelah itu, tekan tombol review + create.
+<img width="1381" height="720" alt="image" src="https://github.com/user-attachments/assets/9d674243-e3f5-4af5-9ba6-0c8a62fbbe27" />
 
-</center>
 
-Pada halaman pembuatan VPC, pilih "VPC and more" lalu masukkan nama project seperti pada layar berikut:<br>
+#### Network Security Group (NSG)
 
-<center>
-<img src="assets/vpc-settings.png" alt="VPC Settings" width=500/>
-</center>
+Selanjutnya, buat Network Security Group (NSG) untuk mengatur lalu lintas jaringan masuk dan keluar. Karena nantinya kita akan memiliki 2 jenis subnet, yakni private dan public, maka NSG yang kita buat juga terdiri dari NSG private dan public.
 
-Selanjutnya, pilih `2` pada jumlah availibility zone, jumlah public subnet, dan jumlah private subnet. Pilih `None` pada VPC endpoints serta biarkan pilihan lainnya.<br>
+Pada contoh di bawah, kita membuat NSG untuk subnet public.
 
-<center>
-<img src="assets/vpc-az.png" alt="VPC AZ" width=500/>
-</center>
+<img width="1402" height="747" alt="image" src="https://github.com/user-attachments/assets/f0ecabbf-1226-45dc-b4aa-212e16f4a15f" />
 
-#### Auto-assign Public IPv4 pada Public Subnet
+Lakukan hal yang sama untuk NSG subnet private.
 
-Setelah VPC terbuat, kita perlu mengaktifkan `auto-assign public IPv4` pada public subnet. Dengan begitu, web server yang nantinya diletakkan pada public subnet dapat diakses melalui internet.<br>
+#### Virtual Networks (VNet)
 
-<center>
-<img src="assets/auto-assing1.png" alt="VPC Settings" width=500/>
-</center>
-<center>
-<img src="assets/auto-assing2.png" alt="VPC Settings" width=500/>
-</center>
-<center>
-<img src="assets/auto-assign3.png" alt="VPC Settings" width=500/>
-</center>
+Sebelum meluncurkan VM untuk web server dan Azure PostgreSQL Database, kita perlu membuat VNet beserta subnet yang diperlukan. Berikut langkah-langkah membuat VNet:<br>
+<img width="1398" height="1148" alt="image" src="https://github.com/user-attachments/assets/b5d0ebe6-58e9-4246-b4d2-a55c71488e79" />
 
-#### Mengatur route table utama
-
-Secara default, route table utama akan terbuat ketika kita membuat VPC. Namun, kita akan menjadikan `lbe-ncc-rtb-public` sebagai route table utama kita. Karenanya, pilih `lbe-ncc-rtb-private` pada pilihan route table lalu klik `Actions > Set main route table`.<br>
+Pada bagian IP addresses, buat 2 subnet untuk public dan private. Tekan add a subnet untuk menambah subnet. Sebelum itu, default subnet yang ada bisa dihapus terlebih dahulu.
 
 <center>
-<img src="assets/main-rt.png" alt="Main Route Table" width=500/>
+<img width="1406" height="382" alt="image" src="https://github.com/user-attachments/assets/24642ac4-ea73-4930-8230-3d5767ed4d18" />
+<img width="1097" height="863" alt="image" src="https://github.com/user-attachments/assets/b1ddeee6-ccd1-4114-8bf4-3bee056bfc8d" />
+<img width="1354" height="489" alt="image" src="https://github.com/user-attachments/assets/a0108c8c-184a-40f5-b786-4ccc955bd72c" />
+
 </center>
+<br>
+Lakukan hal yang sama untuk subnet private. Namun, kita perlu memberikan konfigurasi tambahan pada bagian security dan subnet delegation.<br>
+<img width="1363" height="810" alt="image" src="https://github.com/user-attachments/assets/63149b81-e454-4cbc-8375-dba59d1e3211" />
+
+<img width="1119" height="159" alt="image" src="https://github.com/user-attachments/assets/6e605c78-33c9-4d7a-aef0-17ab9b5e7210" />
+
+Berikut hasil tampilan ketika VNet dan subnet telah selesai dikonfigurasi:
+<img width="1108" height="1172" alt="image" src="https://github.com/user-attachments/assets/99391c7a-77f4-4e9a-a6ff-c353ef0a10e7" />
+
+#### Public IP
+
+Karena VM di Azure tidak secara otomatis memiliki public IP, kita perlu membuat Public IP secara terpisah untuk VM web server agar dapat diakses dari internet. Pilih resource group utama (lbe-ncc) kemudian berikan nama pada public IP. Jangan lupa untuk memberi nama DNS pada IP sehingga lebih mudah diakses oleh user.<br>
+
+<img width="1388" height="1009" alt="image" src="https://github.com/user-attachments/assets/7af50003-6d46-4fc3-a875-2f52e01891ea" />
+<img width="1377" height="702" alt="image" src="https://github.com/user-attachments/assets/1310dd39-4b7b-44c2-b992-c6bc87eb43c5" />
+<img width="1364" height="118" alt="image" src="https://github.com/user-attachments/assets/90d23676-5141-432b-9725-de07e0e5c36c" />
 
 ### Web Server
 
-Web server merupakan perangkat yang menyediakan konten web pada pengguna melalui internet. Kali ini, kita akan menggunakan `linux ec2` dan `Nginx` sebagai web server.
+Web server merupakan perangkat yang menyediakan konten web pada pengguna melalui internet. Kali ini, kita akan menggunakan `linux` dan `Nginx` sebagai web server.
 
-#### Launch instance ec2
+#### Launch VM
 
-Launch instance ec2 dapat dilakukan seperti pada pertemuan 1. Masukkan `webServer-ec2` sebagai nama instance dan pilih `Ubuntu` sebagai os image. Pada `Network Settings`, pilih vpc yang telah kita buat `lbe-ncc-vpc` dan `subnet public`.
+<img width="1397" height="1046" alt="image" src="https://github.com/user-attachments/assets/4b83b40f-3863-44d6-96d4-aad0ba3481c9" />
 
-<center>
-<img src="assets/launch-ec2-1.png" alt="Launch ec2" width=500/>
-</center>
-
-Selain itu, buat pula security group untuk menerima koneksi `ssh` dan `http`.
+Launch instance VM dapat dilakukan seperti pada pertemuan 1. Masukkan `lbe-ncc-vm` sebagai nama instance dan pilih `Ubuntu Server 24.04 LTS - x64 Gen2` sebagai os image. Untuk availability options pilih `No infrastructure redundancy required` dan security type `Standard` untuk menghemat biaya VM. Biarkan konfigurasi `basics` yang lain secara default.
 
 <center>
-<img src="assets/launch-ec2-2.png" alt="Launch ec2" width=500/>
+<img width="1388" height="1086" alt="image" src="https://github.com/user-attachments/assets/ecb10ae0-b8b0-42de-bd75-69c2dbd3291f" />
+<img width="1384" height="118" alt="image" src="https://github.com/user-attachments/assets/89bed620-0088-4e91-91f4-4de5d7ad33f2" />
 </center>
+<br>
 
-Klik `launch instance` lalu tunggu hingga berhasil.
 
-<center>
-<img src="assets/launch-ec2-3.png" alt="Launch ec2" width=500/>
-</center>
+Pada menu `disks`, pilih OS disk type `Standard SSD locally-redundant storage`.
+<img width="1382" height="277" alt="image" src="https://github.com/user-attachments/assets/44167479-b67d-42a9-9167-287cd55377e7" />
 
-Jika telah berhasil, kita dapat melihat public IP web server dengan menekan instance terkait.
+Setelah itu, pada menu `networking` pilih VNet, Subnet, Public IP, dan NSG yang telah dibuat tadi. 
+<img width="1375" height="859" alt="image" src="https://github.com/user-attachments/assets/0cef7fd9-04ea-4634-861a-06d77bd73698" />
+<img width="1400" height="113" alt="image" src="https://github.com/user-attachments/assets/e9ff4dc9-f855-4cea-acf6-f85b5560ee48" />
+<br>
 
-<center>
-<img src="assets/launch-ec2-4.png" alt="Launch ec2" width=500/>
-</center>
+Biarkan konfigurasi lainnya tetap secara default. Berikut tampilan jika VM telah berhasil dibuat:<br>
+<img width="2860" height="1011" alt="image" src="https://github.com/user-attachments/assets/85a05e7b-1fcb-4386-95c6-fd977469deaa" />
 
-#### Mengakses ec2 dengan SSH
+#### Mengatur Network Security Group
 
-Setelah ec2 terbuat, kita dapat mengaksesnya dengan menggunakan SSH. SSH (Secure Shell) merupakan salah satu protokol jaringan yang biasa digunakan untuk memberikan `command` pada remote server. Command dasar ssh adalah `ssh username@host`, dengan username merupakan nama pengguna pada server dan host merupakan hostname atau alamat IP dari server. Selain itu, kita perlu juga menambahkan private key dengan memberikan opsi `-i <nama-file>.pem`. Berikut cara mengakses web server melalui SSH (jangan lupa berpindah ke direktori yang sama dengan file `.pem`).
+Meskipun kita telah membuat VM, kita belum bisa mengakses VM. Terlihat tulisan error yang mengatakan bahwa VM tidak menerima akses dari port 22. <br>
+<img width="1391" height="1221" alt="image" src="https://github.com/user-attachments/assets/2ffec4c9-fd1e-4df5-9710-e2c0c17b9c3f" />
 
-<center>
-<img src="assets/ssh-1.png" alt="SSH" width=500/>
-</center>
-<center>
-<img src="assets/ssh-2.png" alt="SSH" width=500/>
-</center>
+Ini dikarenakan kita belum melakukan konfigurasi pada Network Security Group dari subnet public yang digunakan tempat VM berada. Untuk itu, kita perlu memberikan izin pada port 22 (SSH), 80 (HTTP), dan 443 (HTTPS) pada NSG public, agar VM web server dapat diakses dari public IP.
+
+Pertama, pergi ke NSG public lalu pilih `inbound security rules`.
+
+<img width="1152" height="832" alt="image" src="https://github.com/user-attachments/assets/797538b1-3a51-45c2-b8d5-d4c0711c5d36" />
+
+Pilih menu `add` dan pilih service `SSH`. Berikan nama pada security rule dan tekan `add` untuk menambah rule baru. Lakukan hal yang sama untuk `HTTP` dan `HTTPS`
+<img width="1118" height="761" alt="image" src="https://github.com/user-attachments/assets/4eb24db5-8ff6-45b3-9c41-270f34c7a816" />
+
+Setelah mengizinkan port 22 untuk masuk ke VM, kita bisa melihat bahwa di bagian `VM access` sudah berubah menjadi `Port 22 is accessible from source IP(s)`.
+<img width="1319" height="175" alt="image" src="https://github.com/user-attachments/assets/0f7544ca-8b39-42d1-b2eb-7a252fdc5dac" />
+
+
+#### Mengakses VM dengan SSH
+
+Setelah mengatur security rule pada Network Security Group, kita sudah dapat mengakses VM dengan menggunakan SSH. SSH (Secure Shell) merupakan salah satu protokol jaringan yang biasa digunakan untuk memberikan `command` pada remote server. Command dasar ssh adalah `ssh username@host`, dengan username merupakan nama pengguna pada server dan host merupakan hostname atau alamat IP dari server. Selain itu, kita perlu juga menambahkan private key dengan memberikan opsi `-i <nama-file>.pem`. 
+
+Berikut cara mengakses VM web server melalui SSH (jangan lupa copy path file `.pem` lalu tuliskan setelah `-i`). <br>
+
+<img width="1832" height="195" alt="image" src="https://github.com/user-attachments/assets/b38135f1-33b0-4264-b36d-6d638847aacb" />
+<img width="1476" height="725" alt="image" src="https://github.com/user-attachments/assets/3e4accc5-81be-4c86-91a6-0f632d9664c3" />
 
 #### Install dan menjalankan NGINX
 
 Meskipun telah membuka port HTTP, kita belum dapat mengakses apapun pada browser.
 
 <center>
-<img src="assets/nginx-1.png" alt="Nginx" width=500/>
+<img width="2866" height="1246" alt="image" src="https://github.com/user-attachments/assets/c2acc691-e14b-4eed-aa1c-c9c7cda3e524" />
 </center>
 
-Hal ini dikarenakan belum ada software yang menerima request pada port 80. Karenanya, kita membutuhkan Nginx sebagai web server yang akan menerima request dari pengguna. Untuk mengaktifkannya, kita perlu menginstal terlebih dahulu.
+Hal ini dikarenakan belum ada software yang menerima request pada port 80. Karenanya, kita membutuhkan Nginx sebagai web server yang akan menerima request dari pengguna. Untuk mengaktifkannya, kita perlu menginstal terlebih dahulu. Jalankan script berikut pada ubuntu untuk menginstall `nginx`
 
-<center>
-<img src="assets/nginx-2.png" alt="Nginx" width=500/>
-</center>
+```
+sudo apt-get update
+sudo apt install nginx
+```
+<img width="1593" height="413" alt="image" src="https://github.com/user-attachments/assets/72efc01f-bcca-4747-a213-003a215485af" />
 
 Selanjutnya, kita dapat mengaktifkannya dengan command `sudo systemctl start nginx` dan memeriksa status nginx dengan `sudo systemctl status nginx`.
 
-<center>
-<img src="assets/nginx-3.png" alt="Nginx" width=500/>
-</center>
+```
+sudo systemctl start nginx
+sudo systemctl status nginx
+```
+<img width="2311" height="716" alt="image" src="https://github.com/user-attachments/assets/48b05d18-f561-4860-b047-b929159b92a2" />
 
 Sekarang, kita dapat mengakses web pada browser seperti berikut:
 
-<center>
-<img src="assets/nginx-4.png" alt="Nginx" width=500/>
-</center>
+<img width="1431" height="694" alt="image" src="https://github.com/user-attachments/assets/ecc3b958-bd57-42d8-aab1-725877e8ae30" />
 
 ### Database
 
-Sebagian besar aplikasi web membutuhkan database untuk menyimpan data yang dibutuhkan. Pada kali ini, kita akan menggunakan database postgresql pada Amazon RDS.
+Sebagian besar aplikasi web membutuhkan database untuk menyimpan data yang dibutuhkan. Pada kali ini, kita akan menggunakan database postgresql pada `Azure Database for PostgreSQL flexible servers`.
 
-#### Mengatur Security Group
+#### Launch Azure PostgreSQL Database 
+
+Pilih create `Azure Database for PostgreSQL flexible servers` lalu isi dengan konfigurasi berikut: <br>
+<img width="1366" height="1170" alt="image" src="https://github.com/user-attachments/assets/84309c57-7003-4092-ae6f-954fec07d297" />
+
+Pada bagian `Compute + storage`, buka menu `configure server` untuk mengatur spesifikasi penyimpanan database. Pilih compute size dengan tipe `Standard_B1ms (1 vCore, 2 GiB memory, 640 max iops)`. Dengan memilih konfigurasi ini, penggunaan sumber daya jadi lebih efisien sehingga biaya operasional database menjadi lebih rendah. Setelah itu, tekan save untuk menyimpan perubahan.
+<img width="1368" height="764" alt="image" src="https://github.com/user-attachments/assets/eb90f67a-1f8e-4ed1-9f17-21863150acbb" />
+
+Lalu, pada bagian `Authentication`, pilih `PostgreSQL authentication only` dan masukkan username dan password database yang diinginkan.
+<img width="1359" height="811" alt="image" src="https://github.com/user-attachments/assets/4b6cb2b3-a170-4f93-a865-2894e26788e4" />
+
+Setelah itu, tekan tombol `next: networking` lalu pilih connectivity method `private access` dan masukkan VNet dan subnet private yang telah dibuat sebelumnya. 
+<img width="1361" height="926" alt="image" src="https://github.com/user-attachments/assets/2fabcc67-c7b7-485b-8603-169da77193d4" />
+
+Biarkan konfigurasi lainnya tetap secara default dan tekan review + create. 
+
+#### Mengatur Network Security Group
 
 Web server yang telah kita buat perlu berkomunikasi dengan database. Karenanya, kita perlu mengatur security group agar database dapat menerima koneksi postgresql (port 5432) dari web server, begitupun sebaliknya.
-Pertama, kita perlu membuat `ncc-db-sg` melalui menu `Security Groups` pada `VPC Dashboard`. Selanjutnya, klik `Create Security Group`.
 
-<center>
-<img src="assets/sg-1.png" alt="Security Group" width=500/>
-</center>
-
-Pada halaman `Create Security Group`, masukkan nama dan deskripsi yang sesuai. Selain itu, pilih juga VPC sesuai yang telah dibuat sebelumnya.
-
-<center>
-<img src="assets/sg-2.png" alt="Security Group" width=500/>
-</center>
-
-Selanjutnya, kita perlu menambahkan aturan pada `inbound rule` untuk mengirim dan menerima koneksi postgresql (port 5432) dari/ke web server (pilih source dan destination ke security group web server, `webServer-sg`).
+Pertama, pergi ke NSG priv lalu pilih `inbound security rules`. Kita perlu menambahkan aturan pada `inbound rule` untuk mengirim dan menerima koneksi postgresql (port 5432) dari/ke web server.
 
 <center>
 <img src="assets/sg-3.png" alt="Security Group" width=500/>
