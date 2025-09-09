@@ -37,6 +37,8 @@ Bagian ini menjelaskan layanan yang menyediakan blok penyusun untuk merancang li
 
 #### 1. Virtual Network (VNet)
 
+<img width="849" height="436" alt="v-net" src="https://github.com/user-attachments/assets/0fba1ee8-c40b-4f86-8bba-c48babd2a3cc" />
+
 Azure Virtual Network (VNet) adalah jaringan pribadi (private network) di dalam Azure. Ibaratnya seperti "kompleks perumahan" khusus yang di dalamnya ada rumah-rumah seperti Virtual Machine (VM), Azure Kubernetes Service (AKS), App Service Environment, dll yang bisa saling mengobrol secara privat.
 
 Fungsinya antara lain:
@@ -61,6 +63,8 @@ Dengan NSG, kita bisa membuat aturan seperti:
 
 #### 3. Service Endpoints
 
+<img width="612" height="445" alt="vnet-service-endpoints-overview" src="https://github.com/user-attachments/assets/1793472a-1686-4780-8dec-d92b2e55791f" />
+
 Service Endpoints membuat resource dalam VNet yang dapat langsung terhubung ke layanan Azure seperti Storage atau SQL Database melalui jalur privat Microsoft.
 
 Kelebihannya antara lain:
@@ -69,11 +73,9 @@ Kelebihannya antara lain:
 
 - Bisa membatasi layanan Azure supaya hanya bisa diakses dari VNet tertentu.
 
-```
-DISINI GAMBAR!!
-```
-
 #### 4. Azure Private Link
+
+<img width="956" height="511" alt="private-endpoint" src="https://github.com/user-attachments/assets/d5b4a3bb-0bf7-4121-9958-5b7e09685d80" />
 
 Azure Private Link lebih privat daripada Service Endpoints. Dengan ini, layanan Azure (misalnya Storage atau SQL) punya alamat IP privat langsung di dalam VNet kita.
 
@@ -84,10 +86,6 @@ Keuntungannya antara lain:
 - Tidak perlu mengekspos layanan ke internet publik.
 
 - Bisa juga dipakai untuk berbagi layanan dengan partner atau pelanggan.
-
-```
-DISINI GAMBAR!!
-```
 
 #### 5. DNS Azure
 
@@ -103,6 +101,8 @@ Azure DNS terdiri dari tiga layanan:
 
 #### 6. Azure Bastion
 
+<img width="929" height="339" alt="architecture" src="https://github.com/user-attachments/assets/54103169-34fc-47a4-9964-7de6183ba581" />
+
 Azure Bastion adalah cara aman untuk mengakses VM tanpa harus memberi Public IP ke VM tersebut.
 
 Keuntungan dari Azure Bastion:
@@ -113,11 +113,9 @@ Keuntungan dari Azure Bastion:
 
 - Tidak perlu software tambahan di sisi VM.
 
-```
-DISINI GAMBAR!!
-```
-
 #### 7. Azure Route Server
+
+<img width="1142" height="720" alt="route-server-overview" src="https://github.com/user-attachments/assets/d5994ee6-f2be-4046-8071-80e1247ffa17" />
 
 Route Server memudahkan pengaturan rute jaringan secara otomatis menggunakan BGP (Border Gateway Protocol) tanpa perlu mengonfigurasi atau memelihara tabel rute secara manual.
 
@@ -127,11 +125,9 @@ Kegunaan dari Azure Route Server:
 
 - Membuat integrasi jaringan lebih mudah.
 
-```
-DISINI GAMBAR!!
-```
-
 #### 8. NAT Gateway
+
+<img width="472" height="603" alt="flow-map" src="https://github.com/user-attachments/assets/c3875f2a-db3a-4a5b-91f7-4643033aa4c4" />
 
 NAT Gateway berfungsi sebagai “pintu keluar bersama” untuk resource dalam subnet.
 
@@ -143,11 +139,9 @@ Manfaat dari NAT Gateway:
 
 - Membantu kalau butuh IP keluar (outbound) yang konsisten.
 
-```
-DISINI GAMBAR!!
-```
-
 #### 9. Azure Traffic Manager
+
+<img width="780" height="600" alt="priority" src="https://github.com/user-attachments/assets/ce2c4697-3d84-4ffa-b06c-a9697056969b" />
 
 Azure Traffic Manager adalah penyeimbang beban lalu lintas berbasis DNS yang berfungsi mengatur distribusi trafik pengguna ke resouce di berbagai lokasi (region).
 
@@ -158,10 +152,6 @@ Kelebihan Azure Traffic Manager:
 - Menyediakan failover, jadi layanan tetap jalan meskipun ada yang mati.
 
 - Bisa atur strategi distribusi trafik sesuai kebutuhan (misalnya prioritas atau lokasi geografis).
-
-```
-DISINI GAMBAR!!
-```
 
 ### Penyeimbangan Beban dan Pengiriman Konten
 
@@ -175,9 +165,7 @@ Azure Load Balancer tersedia dalam SKU Standar, Regional, dan Gateway.
 
 Gambar berikut menunjukkan aplikasi multi-tingkat yang menggunakan load balancer eksternal dan internal:
 
-```
-DISINI GAMBAR!!
-```
+<img width="241" height="397" alt="load-balancer" src="https://github.com/user-attachments/assets/9a0cb865-048d-42e0-a096-4c988f2bb3ee" />
 
 #### 2. Application Gateway
 
@@ -187,9 +175,8 @@ Selain itu, Application Gateway juga dilengkapi dengan Web Application Firewall 
 
 Gambar berikut memperlihatkan perutean berbasis jalur URL dengan Application Gateway.
 
-```
-DISINI GAMBAR!!
-```
+<img width="597" height="233" alt="figure1-720" src="https://github.com/user-attachments/assets/849790e6-6ad4-42fa-b598-5f150d3ea5fc" />
+
 
 #### 3. Azure Front Door
 
@@ -197,9 +184,8 @@ Azure Front Door berfungsi sebagai pintu depan global untuk aplikasi. Layanan in
 
 Tidak hanya itu, layanan ini juga menyediakan failover otomatis. Artinya, jika terjadi gangguan di salah satu wilayah, permintaan pengguna bisa segera dialihkan ke wilayah lain yang masih aktif. Dengan fitur ini, aplikasi bisa tetap tersedia meskipun ada masalah di sebagian infrastruktur. Front Door sangat cocok digunakan untuk aplikasi berskala besar yang melayani pengguna lintas negara dan membutuhkan performa tinggi serta ketersediaan global.
 
-```
-DISINI GAMBAR!!
-```
+<img width="520" height="530" alt="front-door-visual-diagram" src="https://github.com/user-attachments/assets/85440f66-48d5-4566-9c42-35a0bd1ce4d4" />
+
 
 ### Konektivitas Hibrid
 
@@ -217,25 +203,22 @@ VPN Gateway adalah layanan yang memungkinkan kita membuat koneksi terenkripsi (a
 
 Diagram berikut mengilustrasikan beberapa koneksi VPN situs-ke-situs ke jaringan virtual yang sama.
 
-```
-DISINI GAMBAR!!
-```
+<img width="1487" height="377" alt="multi-site" src="https://github.com/user-attachments/assets/51f3349a-af26-4603-9d51-d6788ae555d3" />
+
 
 #### 2. ExpressRoute
 
 ExpressRoute adalah layanan untuk membuat koneksi privat langsung dari jaringan lokal ke Azure tanpa lewat internet. Karena jalurnya privat, koneksi ini biasanya lebih aman, stabil, dan memiliki kecepatan tinggi. ExpressRoute juga bisa digunakan untuk mengakses layanan lain dari Microsoft, seperti Microsoft 365 dan Dynamics 365. Layanan ini biasanya dipakai oleh perusahaan yang punya kebutuhan koneksi besar dan kritis.
 
-```
-DISINI GAMBAR!!
-```
+<img width="1215" height="581" alt="expressroute-connection-overview" src="https://github.com/user-attachments/assets/8dcfd879-e82d-4e7e-b973-64793bcf26e1" />
+
 
 #### 3. Virtual WAN
 
 Azure Virtual WAN adalah layanan yang menggabungkan berbagai kebutuhan konektivitas dan keamanan jaringan dalam satu tempat. Dengan Virtual WAN, perusahaan bisa menghubungkan kantor cabang, pengguna jarak jauh, bahkan mengatur rute antar jaringan virtual dengan lebih mudah. Layanan ini juga mendukung koneksi site-to-site VPN, point-to-site VPN, ExpressRoute, serta konektivitas antar-VNet. Selain itu, ada juga fitur tambahan seperti firewall, enkripsi, dan perutean otomatis yang membantu menjaga koneksi tetap aman dan efisien.
 
-```
-DISINI GAMBAR!!
-```
+<img width="688" height="409" alt="virtual-wan-diagram" src="https://github.com/user-attachments/assets/751b322e-cec8-4ebc-8ccf-007757addcdb" />
+
 
 #### 4. Layanan Peering
 
@@ -247,29 +230,27 @@ Bagian ini menjelaskan layanan jaringan di Azure yang melindungi dan memantau su
 
 #### 1. Firewall Manager
 
+<img width="494" height="578" alt="trusted-security-partners" src="https://github.com/user-attachments/assets/f82f5dd2-da14-479a-b138-e785a09c57e3" />
+
 Azure Firewall Manager adalah layanan untuk mengatur keamanan secara terpusat. Dengan layanan ini, kita bisa membuat satu kebijakan keamanan yang berlaku di banyak jaringan dan wilayah Azure. Firewall Manager juga mendukung arsitektur jaringan yang berbeda, baik untuk hub virtual yang aman maupun jaringan hub biasa. Selain itu, layanan ini bisa digunakan untuk mengelola Azure Firewall di berbagai lokasi, mengaktifkan perlindungan DDoS, hingga mengatur kebijakan Web Application Firewall (WAF).
 
-```
-DISINI GAMBAR!!
-```
 
 #### 2. Azure Firewall
 
+<img width="536" height="349" alt="firewall-threat" src="https://github.com/user-attachments/assets/5309ea4e-17a9-4f37-a62a-c4694ec31bfc" />
+
 Azure Firewall adalah layanan firewall berbasis cloud yang terkelola penuh oleh Azure. Fungsi utamanya adalah melindungi resource di dalam Virtual Network (VNet). Dengan Azure Firewall, kita bisa membuat aturan untuk mengatur lalu lintas masuk dan keluar jaringan, baik untuk aplikasi maupun koneksi lain. Layanan ini juga menyediakan alamat IP publik statis, sehingga semua lalu lintas keluar dari jaringan bisa dikenali dengan jelas.
 
-```
-DISINI GAMBAR!!
-```
 
 #### 3. Web Application Firewall
 
+<img width="456" height="306" alt="waf-overview" src="https://github.com/user-attachments/assets/4bc50a68-10fe-4b37-b6e9-4e34477c5e64" />
+
 Azure WAF adalah layanan khusus yang melindungi aplikasi web dari serangan umum, misalnya SQL injection atau cross-site scripting (XSS). WAF ini menggunakan aturan bawaan untuk melindungi dari 10 kerentanan paling berbahaya menurut OWASP, dan kita juga bisa menambahkan aturan sendiri sesuai kebutuhan (misalnya berdasarkan IP, cookie, atau query string). WAF bisa dipasang bersama Azure Application Gateway untuk perlindungan regional, atau dengan Azure Front Door untuk perlindungan global di titik akses publik.
 
-```
-DISINI GAMBAR!!
-```
-
 #### 4. Perlindungan DDoS
+
+<img width="1196" height="553" alt="ddos-protection-overview-architecture" src="https://github.com/user-attachments/assets/ed11d549-3050-4134-8036-91ace0becac2" />
 
 Azure DDoS Protection adalah layanan untuk melindungi aplikasi dari serangan Distributed Denial of Service (DDoS). Layanan ini secara otomatis mendeteksi dan memitigasi serangan yang mencoba membanjiri sistem dengan lalu lintas berlebihan. Ada dua jenis layanan DDoS di Azure:
 
@@ -277,9 +258,6 @@ Azure DDoS Protection adalah layanan untuk melindungi aplikasi dari serangan Dis
 
 - DDoS IP Protection, yang melindungi alamat IP tertentu dengan biaya berdasarkan jumlah IP yang diamankan.
 
-```
-DISINI GAMBAR!!
-```
 
 #### 5. Keamanan Jaringan Kontainer
 
@@ -291,11 +269,9 @@ Bagian ini menjelaskan layanan manajemen dan pemantauan jaringan di Azure - Netw
 
 #### 1. Azure Network Watcher
 
-Azure Network Watcher adalah layanan yang dipakai untuk memantau dan mendiagnosis jaringan di Azure. Dengan layanan ini, kita bisa melihat metrik lalu lintas, mengecek apakah ada masalah koneksi, sampai mengaktifkan log agar aktivitas jaringan bisa tercatat. Network Watcher membantu kita memahami apa yang sebenarnya terjadi di dalam jaringan, jadi lebih mudah untuk menemukan dan memperbaiki masalah.
+<img width="600" height="219" alt="network-watcher-capabilities" src="https://github.com/user-attachments/assets/9f304761-ed6b-480e-920e-2280a83b45a3" />
 
-```
-DISINI GAMBAR!!
-```
+Azure Network Watcher adalah layanan yang dipakai untuk memantau dan mendiagnosis jaringan di Azure. Dengan layanan ini, kita bisa melihat metrik lalu lintas, mengecek apakah ada masalah koneksi, sampai mengaktifkan log agar aktivitas jaringan bisa tercatat. Network Watcher membantu kita memahami apa yang sebenarnya terjadi di dalam jaringan, jadi lebih mudah untuk menemukan dan memperbaiki masalah.
 
 #### 2. Azure Monitor
 
@@ -303,26 +279,23 @@ Azure Monitor berfokus pada performa aplikasi dan infrastruktur. Layanan ini men
 
 #### 3. Azure Virtual Network Manager
 
-Azure Virtual Network Manager berfungsi untuk mengelola banyak jaringan virtual (VNet) secara terpusat. Dengan layanan ini, kita bisa mengelompokkan jaringan, mengatur konfigurasi konektivitas, hingga menerapkan aturan keamanan sekaligus ke banyak VNet. Jadi, pengelolaan jaringan dalam skala besar bisa dilakukan lebih cepat, konsisten, dan efisien.
+<img width="409" height="577" alt="virtual-network-manager-resources-diagram" src="https://github.com/user-attachments/assets/90bfed7b-452b-4176-8ce5-f387c3de2c0b" />
 
-```
-DISINI GAMBAR!!
-```
+Azure Virtual Network Manager berfungsi untuk mengelola banyak jaringan virtual (VNet) secara terpusat. Dengan layanan ini, kita bisa mengelompokkan jaringan, mengatur konfigurasi konektivitas, hingga menerapkan aturan keamanan sekaligus ke banyak VNet. Jadi, pengelolaan jaringan dalam skala besar bisa dilakukan lebih cepat, konsisten, dan efisien.
 
 #### 4. Pengamantan Jaringan Kontainer
 
 Pengamatan Jaringan Kontainer khusus digunakan untuk lingkungan Kubernetes (AKS). Layanan ini memberikan pandangan detail tentang lalu lintas dan performa jaringan dalam cluster, mulai dari level node, pod, sampai DNS. Dengan begitu, kita bisa memantau kondisi jaringan kontainer secara real-time dan memastikan aplikasi berbasis kontainer tetap berjalan lancar.
 
-```
-DISINI GAMBAR!!
-```
+<img width="586" height="365" alt="advanced-network-observability" src="https://github.com/user-attachments/assets/a893647c-f998-4910-b97a-61ce0f7973f9" />
 
-## Membangun Infrastruktur AWS Sederhana
 
-Setelah mengetahui berbagai macam layanan pada Azure, kita akan mencoba membuat infrastruktur Azure sederhana. Infrastruktur ini terdiri dari web server yang berada di public subnet dan database yang berada di private subnet. Agar database dapat diakses oleh web server, kita akan menambahkan route table yang mengatur lalu lintas jaringan antara public subnet dengan private subnet. Konfigurasi network security group juga perlu dilakukan agar hak akses masing-masing resource sesuai dengan yang dibutuhkan. Struktur infrasturktur dapat lebih jelas dilihat pada ilustrasi berikut:<br>
+## Membangun Infrastruktur Azure Sederhana
+
+Setelah mengetahui berbagai macam layanan pada Azure, kita akan mencoba membuat infrastruktur Azure sederhana. Infrastruktur ini terdiri dari web server yang berada di public subnet dan database yang berada di private subnet. Karena di Azure tidak terdapat auto assign public IP, maka untuk web servernya kita harus membuatkan public IP sendiri. Kemudian, agar database dapat diakses oleh web server, kita akan mengatur lalu lintas jaringan antara public subnet dengan private subnet pada network security group agar hak akses masing-masing resources sesuai dengan yang dibutuhkan. Struktur infrasturktur dapat lebih jelas dilihat pada ilustrasi berikut:<br>
 
 <center>
-<img src="assets/infrastructur-structure.png" alt="Structure of Infrastructure" height=500/>
+<img width="849" height="436" alt="v-net" src="https://github.com/user-attachments/assets/710e4439-d8f7-4f10-b36f-245738ca07fb" />
 </center>
 
 ### Konfigurasi Jaringan
