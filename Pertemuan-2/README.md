@@ -165,7 +165,7 @@ Azure Load Balancer tersedia dalam SKU Standar, Regional, dan Gateway.
 
 Gambar berikut menunjukkan aplikasi multi-tingkat yang menggunakan load balancer eksternal dan internal:
 
-<img width="241" height="397" alt="load-balancer" src="https://github.com/user-attachments/assets/9a0cb865-048d-42e0-a096-4c988f2bb3ee" />
+<img width="441" height="597" alt="load-balancer" src="https://github.com/user-attachments/assets/9a0cb865-048d-42e0-a096-4c988f2bb3ee" />
 
 #### 2. Application Gateway
 
@@ -302,10 +302,10 @@ Setelah mengetahui berbagai macam layanan pada Azure, kita akan mencoba membuat 
 
 #### VNet
 
-Sebelum meluncurkan ec2 untuk web server dan rds, kita perlu membuat vpc beserta subnet yang diperlukan. Hal tersebut dapat dilakukan dengan mengakses VPC dashboard pada AWS console. Selanjutnya, anda dapat menekan tombol "Create VPC" seperti pada gambar berikut:<br>
+Sebelum meluncurkan vm untuk web server dan Azure Database, kita perlu membuat vnet beserta subnet yang diperlukan. Hal tersebut dapat dilakukan dengan mengakses virtual networks dashboard pada Azure console. Selanjutnya, anda dapat menekan tombol "Create" seperti pada gambar berikut:<br>
 
 <center>
-<img src="assets/vpc-dashboard.png" alt="VPC Dashboard" width=500/>
+
 </center>
 
 Pada halaman pembuatan VPC, pilih "VPC and more" lalu masukkan nama project seperti pada layar berikut:<br>
