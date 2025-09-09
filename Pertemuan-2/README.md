@@ -185,3 +185,29 @@ server {
 sudo systemctl restart nginx
 node ./index.js
 ```
+
+### Menjalankan Aplikasi sebagai Layanan dengan Systemd
+Sebelumnya, kita perlu secara manual menjalankan aplikasi dengan command `node index.js` atau `npm start`. Namun, kita tidak mungkin dapat menjalankan server setiap saat. Oleh karena itu, kita perlu menjalankan aplikasi di latar belakang sebagai suatu layanan. Dengan demikian, aplikasi pada server dapat tetap berjalan dan dapat diakses kapanpun. Hal ini dapat dilakukan dengan mudah di linux dengan menggunakan `systemd`.
+1. Buat systemd file dengan `sudo nano /lib/systemd/system/server.service`, lalu isi sebagai berikut. Jangan lupa untuk mengubah `username` dan `path-to-project` sesuai dengan server masing-masing.
+```
+[Unit]
+Description=Server service
+After=network.target
+
+[Service]
+Type=simple
+User=<username>
+ExecStart=/usr/bin/node <path-to-project>
+Restart=on-failure
+WorkingDirectory=<path-to-project>
+
+[Install]
+WantedBy=multi-user.target
+```
+2. Restart daemon dan jalankan service server. Periksa juga apakah layanan server telah berjalan.
+```
+sudo systemctl daemon-reload
+sudo systemctl start server
+sudo systemctl status server
+```
+3. Akses kembali public ip. Kalian akan mendapati bahwa server berjalan walaupun kalian tidak mengeksekusi npm start pada root project. Dengan demikian, project kalian sudah berjalan pada background.  
