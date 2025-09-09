@@ -1,0 +1,705 @@
+# Pertemuan 1 LBE NCC 2025
+
+## Daftar Isi
+
+1. [Network Service Azure](#network-service-azure)
+   - [Fondasi Jaringan](#fondasi-jaringan)
+   - [Penyeimbangan Beban dan Pengiriman Konten](#penyeimbangan-beban-dan-pengiriman-konten)
+   - [Konektivitas Hibrid](#konektivitas-hibrid)
+   - [Keamanan Jaringan](#keamanan-jaringan)
+   - [Manajemen & Pemantauan](#manajemen-&-pemantauan)
+2. [Membangun Infrastruktur Azure Sederhana](#membangun-infrastruktur-azure-sederhana)
+   - [Konfigurasi Jaringan](#konfigurasi-jaringan)
+   - [Web Server](#web-server)
+   - [Database](#database)
+3. [Deploy Aplikasi](deploy-aplikasi)
+   - [Konfigurasi Aplikasi](#konfigurasi-aplikasi)
+   - [Port Forwarding pada NGINX](#port-Forwarding-pada-nginx)
+   - [Menjalankan Aplikasi sebagai Layanan dengan Systemd](#menjalankan-aplikasi-sebagai-layanan-dengan-systemd)
+
+## Network Service Azure
+
+Azure Networking Services adalah kumpulan layanan yang disediakan Microsoft Azure untuk membangun, menghubungkan, mengamankan, dan mengelola jaringan di cloud. Kumpulan layanan ini memberikan fondasi agar aplikasi dan layanan di Azure bisa saling terhubung dengan aman, cepat, dan stabil, baik antar layanan di cloud, ke internet, maupun ke jaringan lokal.
+
+### Ringkasan Dalam Tabel
+
+| Kategori                                      | Layanan Utama Azure                                                                                        |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Fondasi Jaringan**                          | VNet, NSG, Service Endpoints, Private Link, Azure DNS, Bastion, Route Server, NAT Gateway, Traffic Manager |
+| **Penyeimbangan Beban dan Pengiriman Konten** | Load Balancer, Application Gateway, Azure Front Door                                                       |
+| **Konektivitas Hibrida**                      | VPN Gateway, ExpressRoute, Virtual WAN, Peering Service                                                    |
+| **Keamanan Jaringan**                         | Azure Firewall, Firewall Manager, WAF, DDoS Protection                                                     |
+| **Manajemen & Pemantauan**                    | Network Watcher, Azure Monitor, Virtual Network Manager, NPM                                               |
+
+### Fondasi jaringan
+
+Bagian ini menjelaskan layanan yang menyediakan blok penyusun untuk merancang lingkungan jaringan di Azure seperti Virtual Network (VNet), Network Security Groups, Service Endpoints, Private Link, Azure DNS, Azure Bastion, Route Server, NAT Gateway, dan Traffic Manager.
+
+#### 1. Virtual Network (VNet)
+
+Azure Virtual Network (VNet) adalah jaringan pribadi (private network) di dalam Azure. Ibaratnya seperti "kompleks perumahan" khusus yang di dalamnya ada rumah-rumah seperti Virtual Machine (VM), Azure Kubernetes Service (AKS), App Service Environment, dll yang bisa saling mengobrol secara privat.
+
+Fungsinya antara lain:
+
+- **Berkomunikasi antara sumber daya Azure**: VM atau aplikasi dalam satu VNet bisa saling berkomunikasi secara privat.
+- **Berkomunikasi satu sama lain**: VNet bisa dihubungkan satu sama lain menggunakan peering, baik di wilayah (region) yang sama maupun berbeda.
+- **Berkomunikasi ke internet**: Semua sumber daya (VM, AKS, dll) bisa keluar ke internet. Namun, untuk menerima koneksi dari luar (inbound), dibutuhkan Public IP atau Load Balancer.
+- **Berkomunikasi dengan jaringan lokal**: VNet dapat dihubungkan ke jaringan kantor menggunakan VPN Gateway atau ExpressRoute.
+- **Mengenkripsi lalu lintas antar sumber daya**:VNet mendukung enkripsi untuk lalu lintas antar sumber daya di dalamnya.
+
+Singkatnya, VNet adalah pondasi utama untuk semua komunikasi jaringan di Azure. Semua arsitektur jaringan Azure hampir pasti mulai dari bikin VNet + subnet.
+
+#### 2. Network Security Groups
+
+NSG adalah mekanisme keamanan untuk mengatur izin lalu lintas ke dalam (inbound) dan keluar (outbound) dari sumber daya di dalam VNet. NSG dapat ditempelkan pada subnet atau langsung ke network interface dari VM.
+
+Dengan NSG, kita bisa membuat aturan seperti:
+
+- Hanya mengizinkan akses ke port tertentu (misalnya 443 untuk HTTPS).
+- Membatasi akses RDP/SSH hanya dari alamat IP kantor.
+- Menolak semua lalu lintas yang tidak sesuai protokol yang berlaku.
+
+#### 3. Service Endpoints
+
+Service Endpoints membuat resource dalam VNet yang dapat langsung terhubung ke layanan Azure seperti Storage atau SQL Database melalui jalur privat Microsoft.
+
+Kelebihannya antara lain:
+
+- Trafik tidak lewat internet publik, jadi lebih aman.
+
+- Bisa membatasi layanan Azure supaya hanya bisa diakses dari VNet tertentu.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 4. Azure Private Link
+
+Azure Private Link lebih privat daripada Service Endpoints. Dengan ini, layanan Azure (misalnya Storage atau SQL) punya alamat IP privat langsung di dalam VNet kita.
+
+Keuntungannya antara lain:
+
+- Resource terasa seperti ada di jaringan lokal kita sendiri.
+
+- Tidak perlu mengekspos layanan ke internet publik.
+
+- Bisa juga dipakai untuk berbagi layanan dengan partner atau pelanggan.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 5. DNS Azure
+
+Azure DNS menyediakan hosting dan resolusi DNS menggunakan infrastruktur Microsoft Azure. Layanan ini menghubungkan nama (domain) ke alamat IP.
+
+Azure DNS terdiri dari tiga layanan:
+
+- Public DNS → untuk domain publik, misalnya perusahaan.com.
+
+- Private DNS → untuk nama domain internal yang hanya berlaku di dalam VNet.
+
+- DNS Private Resolver → jembatan supaya DNS Azure bisa terhubung dengan DNS di jaringan lokal (dan sebaliknya).
+
+#### 6. Azure Bastion
+
+Azure Bastion adalah cara aman untuk mengakses VM tanpa harus memberi Public IP ke VM tersebut.
+
+Keuntungan dari Azure Bastion:
+
+- Bisa masuk ke VM lewat browser atau portal Azure.
+
+- Koneksi aman karena sudah lewat TLS.
+
+- Tidak perlu software tambahan di sisi VM.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 7. Azure Route Server
+
+Route Server memudahkan pengaturan rute jaringan secara otomatis menggunakan BGP (Border Gateway Protocol) tanpa perlu mengonfigurasi atau memelihara tabel rute secara manual.
+
+Kegunaan dari Azure Route Server:
+
+- Memungkinkan resource dan perangkat virtual jaringan (seperti firewall atau router) bertukar informasi rute tanpa perlu setting manual.
+
+- Membuat integrasi jaringan lebih mudah.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 8. NAT Gateway
+
+NAT Gateway berfungsi sebagai “pintu keluar bersama” untuk resource dalam subnet.
+
+Manfaat dari NAT Gateway:
+
+- Semua resource keluar ke internet lewat satu alamat IP publik statis.
+
+- Tidak perlu memberi Public IP ke setiap VM.
+
+- Membantu kalau butuh IP keluar (outbound) yang konsisten.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 9. Azure Traffic Manager
+
+Azure Traffic Manager adalah penyeimbang beban lalu lintas berbasis DNS yang berfungsi mengatur distribusi trafik pengguna ke resouce di berbagai lokasi (region).
+
+Kelebihan Azure Traffic Manager:
+
+- Membuat trafik lebih cepat karena diarahkan ke lokasi terdekat atau tercepat.
+
+- Menyediakan failover, jadi layanan tetap jalan meskipun ada yang mati.
+
+- Bisa atur strategi distribusi trafik sesuai kebutuhan (misalnya prioritas atau lokasi geografis).
+
+```
+DISINI GAMBAR!!
+```
+
+### Penyeimbangan Beban dan Pengiriman Konten
+
+Bagian ini menjelaskan layanan jaringan di Azure yang membantu mengirimkan aplikasi dan beban kerja seperti Load Balancer, Application Gateway, dan Azure Front Door Service.
+
+#### 1. Load Balancer
+
+Azure Load Balancer digunakan untuk membagi lalu lintas ke beberapa server agar tidak ada satu server yang terlalu terbebani. Layanan ini bekerja di lapisan 4 (transport) dan mendukung protokol TCP dan UDP. Misalnya, jika terdapat 1000 orang yang membuka aplikasi dalam waktu bersamaan, permintaan mereka akan dibagi rata ke beberapa server agar tidak ada server yang kewalahan.
+
+Azure Load Balancer tersedia dalam SKU Standar, Regional, dan Gateway.
+
+Gambar berikut menunjukkan aplikasi multi-tingkat yang menggunakan load balancer eksternal dan internal:
+
+```
+DISINI GAMBAR!!
+```
+
+#### 2. Application Gateway
+
+Azure Application Gateway adalah layanan penyeimbang beban yang bekerja di lapisan aplikasi (Layer 7). Berbeda dengan Load Balancer yang hanya mengatur lalu lintas di tingkat jaringan, Application Gateway bisa mengarahkan lalu lintas berdasarkan isi permintaan web. Misalnya, permintaan untuk namadomain.com/images bisa diarahkan ke server khusus gambar, sementara namadomain.com/api diarahkan ke server API.
+
+Selain itu, Application Gateway juga dilengkapi dengan Web Application Firewall (WAF) yang melindungi aplikasi dari berbagai ancaman keamanan di web. Layanan ini sangat cocok untuk aplikasi web modern yang membutuhkan kontrol lalu lintas yang lebih detail.
+
+Gambar berikut memperlihatkan perutean berbasis jalur URL dengan Application Gateway.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 3. Azure Front Door
+
+Azure Front Door berfungsi sebagai pintu depan global untuk aplikasi. Layanan ini mempercepat akses aplikasi dengan memilih jalur tercepat di jaringan global Microsoft, sehingga pengguna di mana pun bisa mendapatkan pengalaman akses yang optimal. Jika pengguna berasal dari Indonesia, misalnya, Front Door akan mengarahkan permintaan ke server atau jalur yang paling dekat dan paling cepat.
+
+Tidak hanya itu, layanan ini juga menyediakan failover otomatis. Artinya, jika terjadi gangguan di salah satu wilayah, permintaan pengguna bisa segera dialihkan ke wilayah lain yang masih aktif. Dengan fitur ini, aplikasi bisa tetap tersedia meskipun ada masalah di sebagian infrastruktur. Front Door sangat cocok digunakan untuk aplikasi berskala besar yang melayani pengguna lintas negara dan membutuhkan performa tinggi serta ketersediaan global.
+
+```
+DISINI GAMBAR!!
+```
+
+### Konektivitas Hibrid
+
+Bagian ini menjelaskan layanan konektivitas jaringan yang menyediakan komunikasi aman antara jaringan lokal dan jaringan di Azure seperti VPN Gateway, ExpressRoute, Virtual WAN, dan Peering Service.
+
+#### 1. VPN Gateway
+
+VPN Gateway adalah layanan yang memungkinkan kita membuat koneksi terenkripsi (aman) antara jaringan lokal dengan Virtual Network (VNet) di Azure. Dengan VPN Gateway, kita juga bisa menghubungkan beberapa VNet yang berbeda. Ada beberapa jenis koneksi yang bisa dibuat, seperti:
+
+- Situs ke situs (site-to-site): menghubungkan jaringan kantor langsung ke Azure.
+
+- Titik ke situs (point-to-site): memungkinkan perangkat individu (seperti laptop) terhubung langsung ke Azure.
+
+- VNet ke VNet: menghubungkan beberapa jaringan virtual di Azure agar bisa saling berkomunikasi.
+
+Diagram berikut mengilustrasikan beberapa koneksi VPN situs-ke-situs ke jaringan virtual yang sama.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 2. ExpressRoute
+
+ExpressRoute adalah layanan untuk membuat koneksi privat langsung dari jaringan lokal ke Azure tanpa lewat internet. Karena jalurnya privat, koneksi ini biasanya lebih aman, stabil, dan memiliki kecepatan tinggi. ExpressRoute juga bisa digunakan untuk mengakses layanan lain dari Microsoft, seperti Microsoft 365 dan Dynamics 365. Layanan ini biasanya dipakai oleh perusahaan yang punya kebutuhan koneksi besar dan kritis.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 3. Virtual WAN
+
+Azure Virtual WAN adalah layanan yang menggabungkan berbagai kebutuhan konektivitas dan keamanan jaringan dalam satu tempat. Dengan Virtual WAN, perusahaan bisa menghubungkan kantor cabang, pengguna jarak jauh, bahkan mengatur rute antar jaringan virtual dengan lebih mudah. Layanan ini juga mendukung koneksi site-to-site VPN, point-to-site VPN, ExpressRoute, serta konektivitas antar-VNet. Selain itu, ada juga fitur tambahan seperti firewall, enkripsi, dan perutean otomatis yang membantu menjaga koneksi tetap aman dan efisien.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 4. Layanan Peering
+
+Azure Peering Service adalah layanan yang membantu meningkatkan kualitas koneksi dari jaringan pengguna ke layanan Microsoft, seperti Microsoft 365, Dynamics 365, dan Azure. Dengan menggunakan Peering Service, jalur koneksi ke layanan Microsoft bisa menjadi lebih cepat, lebih stabil, dan lebih andal karena diarahkan lewat jaringan mitra yang sudah bekerja sama langsung dengan Microsoft.
+
+### Keamanan Jaringan
+
+Bagian ini menjelaskan layanan jaringan di Azure yang melindungi dan memantau sumber daya jaringan Anda - Firewall Manager, Firewall, Web Application Firewall, dan DDoS Protection.
+
+#### 1. Firewall Manager
+
+Azure Firewall Manager adalah layanan untuk mengatur keamanan secara terpusat. Dengan layanan ini, kita bisa membuat satu kebijakan keamanan yang berlaku di banyak jaringan dan wilayah Azure. Firewall Manager juga mendukung arsitektur jaringan yang berbeda, baik untuk hub virtual yang aman maupun jaringan hub biasa. Selain itu, layanan ini bisa digunakan untuk mengelola Azure Firewall di berbagai lokasi, mengaktifkan perlindungan DDoS, hingga mengatur kebijakan Web Application Firewall (WAF).
+
+```
+DISINI GAMBAR!!
+```
+
+#### 2. Azure Firewall
+
+Azure Firewall adalah layanan firewall berbasis cloud yang terkelola penuh oleh Azure. Fungsi utamanya adalah melindungi resource di dalam Virtual Network (VNet). Dengan Azure Firewall, kita bisa membuat aturan untuk mengatur lalu lintas masuk dan keluar jaringan, baik untuk aplikasi maupun koneksi lain. Layanan ini juga menyediakan alamat IP publik statis, sehingga semua lalu lintas keluar dari jaringan bisa dikenali dengan jelas.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 3. Web Application Firewall
+
+Azure WAF adalah layanan khusus yang melindungi aplikasi web dari serangan umum, misalnya SQL injection atau cross-site scripting (XSS). WAF ini menggunakan aturan bawaan untuk melindungi dari 10 kerentanan paling berbahaya menurut OWASP, dan kita juga bisa menambahkan aturan sendiri sesuai kebutuhan (misalnya berdasarkan IP, cookie, atau query string). WAF bisa dipasang bersama Azure Application Gateway untuk perlindungan regional, atau dengan Azure Front Door untuk perlindungan global di titik akses publik.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 4. Perlindungan DDoS
+
+Azure DDoS Protection adalah layanan untuk melindungi aplikasi dari serangan Distributed Denial of Service (DDoS). Layanan ini secara otomatis mendeteksi dan memitigasi serangan yang mencoba membanjiri sistem dengan lalu lintas berlebihan. Ada dua jenis layanan DDoS di Azure:
+
+- DDoS Network Protection, yang memberikan perlindungan otomatis ke resource dalam VNet.
+
+- DDoS IP Protection, yang melindungi alamat IP tertentu dengan biaya berdasarkan jumlah IP yang diamankan.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 5. Keamanan Jaringan Kontainer
+
+Keamanan jaringan kontainer adalah fitur tambahan untuk melindungi aplikasi yang berjalan di dalam Azure Kubernetes Service (AKS). Layanan ini memungkinkan penerapan aturan keamanan berbasis domain (FQDN) sehingga lebih detail dan sesuai prinsip Zero Trust. Dengan begitu, setiap komunikasi antar kontainer bisa diawasi dan dibatasi sesuai kebutuhan, tanpa memberi akses berlebihan.
+
+### Manajemen dan Pemantauan Jaringan
+
+Bagian ini menjelaskan layanan manajemen dan pemantauan jaringan di Azure - Network Watcher, Azure Monitor, dan Azure Virtual Network Manager.
+
+#### 1. Azure Network Watcher
+
+Azure Network Watcher adalah layanan yang dipakai untuk memantau dan mendiagnosis jaringan di Azure. Dengan layanan ini, kita bisa melihat metrik lalu lintas, mengecek apakah ada masalah koneksi, sampai mengaktifkan log agar aktivitas jaringan bisa tercatat. Network Watcher membantu kita memahami apa yang sebenarnya terjadi di dalam jaringan, jadi lebih mudah untuk menemukan dan memperbaiki masalah.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 2. Azure Monitor
+
+Azure Monitor berfokus pada performa aplikasi dan infrastruktur. Layanan ini mengumpulkan data dari berbagai sumber, lalu menyajikan informasi yang bisa dipakai untuk analisis. Dengan begitu, kita bisa mengetahui apakah aplikasi berjalan dengan baik, menemukan masalah sebelum menjadi lebih besar, dan menjaga ketersediaan layanan tetap stabil.
+
+#### 3. Azure Virtual Network Manager
+
+Azure Virtual Network Manager berfungsi untuk mengelola banyak jaringan virtual (VNet) secara terpusat. Dengan layanan ini, kita bisa mengelompokkan jaringan, mengatur konfigurasi konektivitas, hingga menerapkan aturan keamanan sekaligus ke banyak VNet. Jadi, pengelolaan jaringan dalam skala besar bisa dilakukan lebih cepat, konsisten, dan efisien.
+
+```
+DISINI GAMBAR!!
+```
+
+#### 4. Pengamantan Jaringan Kontainer
+
+Pengamatan Jaringan Kontainer khusus digunakan untuk lingkungan Kubernetes (AKS). Layanan ini memberikan pandangan detail tentang lalu lintas dan performa jaringan dalam cluster, mulai dari level node, pod, sampai DNS. Dengan begitu, kita bisa memantau kondisi jaringan kontainer secara real-time dan memastikan aplikasi berbasis kontainer tetap berjalan lancar.
+
+```
+DISINI GAMBAR!!
+```
+
+## Membangun Infrastruktur AWS Sederhana
+
+Setelah mengetahui berbagai macam layanan pada Azure, kita akan mencoba membuat infrastruktur Azure sederhana. Infrastruktur ini terdiri dari web server yang berada di public subnet dan database yang berada di private subnet. Agar database dapat diakses oleh web server, kita akan menambahkan route table yang mengatur lalu lintas jaringan antara public subnet dengan private subnet. Konfigurasi network security group juga perlu dilakukan agar hak akses masing-masing resource sesuai dengan yang dibutuhkan. Struktur infrasturktur dapat lebih jelas dilihat pada ilustrasi berikut:<br>
+
+<center>
+<img src="assets/infrastructur-structure.png" alt="Structure of Infrastructure" height=500/>
+</center>
+
+### Konfigurasi Jaringan
+
+#### VNet
+
+Sebelum meluncurkan ec2 untuk web server dan rds, kita perlu membuat vpc beserta subnet yang diperlukan. Hal tersebut dapat dilakukan dengan mengakses VPC dashboard pada AWS console. Selanjutnya, anda dapat menekan tombol "Create VPC" seperti pada gambar berikut:<br>
+
+<center>
+<img src="assets/vpc-dashboard.png" alt="VPC Dashboard" width=500/>
+</center>
+
+Pada halaman pembuatan VPC, pilih "VPC and more" lalu masukkan nama project seperti pada layar berikut:<br>
+
+<center>
+<img src="assets/vpc-settings.png" alt="VPC Settings" width=500/>
+</center>
+
+Selanjutnya, pilih `2` pada jumlah availibility zone, jumlah public subnet, dan jumlah private subnet. Pilih `None` pada VPC endpoints serta biarkan pilihan lainnya.<br>
+
+<center>
+<img src="assets/vpc-az.png" alt="VPC AZ" width=500/>
+</center>
+
+#### Auto-assign Public IPv4 pada Public Subnet
+
+Setelah VPC terbuat, kita perlu mengaktifkan `auto-assign public IPv4` pada public subnet. Dengan begitu, web server yang nantinya diletakkan pada public subnet dapat diakses melalui internet.<br>
+
+<center>
+<img src="assets/auto-assing1.png" alt="VPC Settings" width=500/>
+</center>
+<center>
+<img src="assets/auto-assing2.png" alt="VPC Settings" width=500/>
+</center>
+<center>
+<img src="assets/auto-assign3.png" alt="VPC Settings" width=500/>
+</center>
+
+#### Mengatur route table utama
+
+Secara default, route table utama akan terbuat ketika kita membuat VPC. Namun, kita akan menjadikan `lbe-ncc-rtb-public` sebagai route table utama kita. Karenanya, pilih `lbe-ncc-rtb-private` pada pilihan route table lalu klik `Actions > Set main route table`.<br>
+
+<center>
+<img src="assets/main-rt.png" alt="Main Route Table" width=500/>
+</center>
+
+### Web Server
+
+Web server merupakan perangkat yang menyediakan konten web pada pengguna melalui internet. Kali ini, kita akan menggunakan `linux ec2` dan `Nginx` sebagai web server.
+
+#### Launch instance ec2
+
+Launch instance ec2 dapat dilakukan seperti pada pertemuan 1. Masukkan `webServer-ec2` sebagai nama instance dan pilih `Ubuntu` sebagai os image. Pada `Network Settings`, pilih vpc yang telah kita buat `lbe-ncc-vpc` dan `subnet public`.
+
+<center>
+<img src="assets/launch-ec2-1.png" alt="Launch ec2" width=500/>
+</center>
+
+Selain itu, buat pula security group untuk menerima koneksi `ssh` dan `http`.
+
+<center>
+<img src="assets/launch-ec2-2.png" alt="Launch ec2" width=500/>
+</center>
+
+Klik `launch instance` lalu tunggu hingga berhasil.
+
+<center>
+<img src="assets/launch-ec2-3.png" alt="Launch ec2" width=500/>
+</center>
+
+Jika telah berhasil, kita dapat melihat public IP web server dengan menekan instance terkait.
+
+<center>
+<img src="assets/launch-ec2-4.png" alt="Launch ec2" width=500/>
+</center>
+
+#### Mengakses ec2 dengan SSH
+
+Setelah ec2 terbuat, kita dapat mengaksesnya dengan menggunakan SSH. SSH (Secure Shell) merupakan salah satu protokol jaringan yang biasa digunakan untuk memberikan `command` pada remote server. Command dasar ssh adalah `ssh username@host`, dengan username merupakan nama pengguna pada server dan host merupakan hostname atau alamat IP dari server. Selain itu, kita perlu juga menambahkan private key dengan memberikan opsi `-i <nama-file>.pem`. Berikut cara mengakses web server melalui SSH (jangan lupa berpindah ke direktori yang sama dengan file `.pem`).
+
+<center>
+<img src="assets/ssh-1.png" alt="SSH" width=500/>
+</center>
+<center>
+<img src="assets/ssh-2.png" alt="SSH" width=500/>
+</center>
+
+#### Install dan menjalankan NGINX
+
+Meskipun telah membuka port HTTP, kita belum dapat mengakses apapun pada browser.
+
+<center>
+<img src="assets/nginx-1.png" alt="Nginx" width=500/>
+</center>
+
+Hal ini dikarenakan belum ada software yang menerima request pada port 80. Karenanya, kita membutuhkan Nginx sebagai web server yang akan menerima request dari pengguna. Untuk mengaktifkannya, kita perlu menginstal terlebih dahulu.
+
+<center>
+<img src="assets/nginx-2.png" alt="Nginx" width=500/>
+</center>
+
+Selanjutnya, kita dapat mengaktifkannya dengan command `sudo systemctl start nginx` dan memeriksa status nginx dengan `sudo systemctl status nginx`.
+
+<center>
+<img src="assets/nginx-3.png" alt="Nginx" width=500/>
+</center>
+
+Sekarang, kita dapat mengakses web pada browser seperti berikut:
+
+<center>
+<img src="assets/nginx-4.png" alt="Nginx" width=500/>
+</center>
+
+### Database
+
+Sebagian besar aplikasi web membutuhkan database untuk menyimpan data yang dibutuhkan. Pada kali ini, kita akan menggunakan database postgresql pada Amazon RDS.
+
+#### Mengatur Security Group
+
+Web server yang telah kita buat perlu berkomunikasi dengan database. Karenanya, kita perlu mengatur security group agar database dapat menerima koneksi postgresql (port 5432) dari web server, begitupun sebaliknya.
+Pertama, kita perlu membuat `ncc-db-sg` melalui menu `Security Groups` pada `VPC Dashboard`. Selanjutnya, klik `Create Security Group`.
+
+<center>
+<img src="assets/sg-1.png" alt="Security Group" width=500/>
+</center>
+
+Pada halaman `Create Security Group`, masukkan nama dan deskripsi yang sesuai. Selain itu, pilih juga VPC sesuai yang telah dibuat sebelumnya.
+
+<center>
+<img src="assets/sg-2.png" alt="Security Group" width=500/>
+</center>
+
+Selanjutnya, kita perlu menambahkan aturan pada `inbound rule` untuk mengirim dan menerima koneksi postgresql (port 5432) dari/ke web server (pilih source dan destination ke security group web server, `webServer-sg`).
+
+<center>
+<img src="assets/sg-3.png" alt="Security Group" width=500/>
+</center><center>
+<img src="assets/sg-4.png" alt="Security Group" width=500/>
+</center>
+
+Kita juga perlu mengubah security group pada web server agar dapat menerima koneksi postgresql seperti di atas.
+
+<center>
+<img src="assets/sg-5.png" alt="Security Group" width=500/>
+</center>
+<center>
+<img src="assets/sg-6.png" alt="Security Group" width=500/>
+</center>
+<center>
+<img src="assets/sg-7.png" alt="Security Group" width=500/>
+</center>
+
+#### Membuat DB Subnet Group
+
+Pada `Amazon RDS > Subnet Groups`, klik `Create DB Subnet Group`
+
+<center>
+<img src="assets/subnet-group-1.png" alt="Subnet Group" width=500/>
+</center>
+
+Pada halaman `create DB Subnet Group`, masukkan nama yang sesuai dan pilih VPC sesuai dengan VPC yang telah dibuat (ncc-vpc).
+
+<center>
+<img src="assets/subnet-group-2.png" alt="Subnet Group" width=500/>
+</center>
+
+Selanjutnya, pilih subnet yang sesuai dengan `private subnet`. Karena dropdown tidak menampilkan nama subnet, kalian bisa mencari id dari `private subnet`.
+
+<center>
+<img src="assets/subnet-group-3.png" alt="Subnet Group" width=500/>
+</center>
+<center>
+<img src="assets/subnet-group-4.png" alt="Subnet Group" width=500/>
+</center>
+
+Klik `create` dan subnet group berhasil dibuat.
+
+<center>
+<img src="assets/subnet-group-5.png" alt="Subnet Group" width=500/>
+</center>
+
+#### Launch RDS
+
+Pertama, akses Amazon RDS dashboard dan pilih menu `Database`. Selanjutnya, klik tombol `Create Database` yang terdapat di kanan atas sebelah `Restore from S3`.
+
+<center>
+<img src="assets/rds-1.png" alt="RDS" width=500/>
+</center>
+
+Pada halaman `Create Database`, pilih metode `Standard Create` dan opsi engine `PostgreSQL` (bukan Aurora postgreSQL compatible).
+
+<center>
+<img src="assets/rds-2.png" alt="RDS" width=500/>
+</center>
+
+Agar mendapatkan konfigurasi yang sesuai dengan ketentuan layanan gratis, pilih `Free Tier` pada menu `Templates`.
+
+<center>
+<img src="assets/rds-3.png" alt="RDS" width=500/>
+</center>
+
+![alt text](image-16.png)
+Masukkan nama instance, username database, dan password.
+
+<center>
+<img src="assets/rds-4.png" alt="RDS" width=500/>
+</center>
+
+Pada bagian `Connectivity`, pilih `Don't connect to an EC2 compute resource`. Selain itu, pilih vpc `lbe-ncc-vpc` dan subnet group `lbe-ncc-db-subnetgroup`
+
+<center>
+<img src="assets/rds-5.png" alt="RDS" width=500/>
+</center>
+
+Pilih `No` pada bagian `public access` dan `db-sg` (security group yang telah dibuat) pada security group.
+
+<center>
+<img src="assets/rds-6.png" alt="RDS" width=500/>
+</center>
+
+Klik `Create Database` dan database berhasil dibuat.
+
+<center>
+<img src="assets/rds-7.png" alt="RDS" width=500/>
+</center>
+
+#### Mengakses database dari web server
+
+Karena berada di 1 VPC dan kita telah mengatur security group, maka web server seharusnya dapat mengakses private IP database. Untuk mengakses, kita perlu menginstal postgresql pada web server.
+
+<center>
+<img src="assets/web-server-1.png" alt="Web Server" width=500/>
+</center>
+
+Selanjutnya, kita dapat mencoba akses ke database menggunakan `psql` sesuai dengan nama host/endpoint dan portnya.
+
+<center>
+<img src="assets/web-server-2.png" alt="Web Server" width=500/>
+</center>
+<center>
+<img src="assets/web-server-3.png" alt="Web Server" width=500/>
+</center>
+Selamat, anda telah berhasil membuat database di AWS dan mengaksesnya dari ec2.
+
+## Deploy Aplikasi
+
+Setelah berhasil membangun infrastruktur di AWS, kita akan mencoba melakukan deploy aplikasi. Aplikasi yang akan dideploy merupakan aplikasi CRUD sederhana dan dapat diclone dari https://github.com/arizki787/API-Project.
+
+<center>
+<img src="assets/deply-1.png" alt="Deploy" width=500/>
+</center>
+
+Pindah ke directory `API-Project` dan kita dapat melihat file-file yang terdapat pada direktori.
+
+<center>
+<img src="assets/deply-2.png" alt="Deploy" width=500/>
+</center>
+
+### Konfigurasi Aplikasi
+
+Aplikasi yang akan dideploy merupakan aplikasi nodejs sehingga kita perlu menginstall `nodejs` dan `npm` terlebih dahulu.
+
+<center>
+<img src="assets/node-1.png" alt="Node Js" width=500/>
+</center>
+<center>
+<img src="assets/node-2.png" alt="Node Js" width=500/>
+</center>
+
+Selanjutnya, buat database beserta tabelnya dengan terlebih dahulu mengakses postgresql di RDS. Buat database `school` dan tabel `student` dengan query berikut:
+
+```R
+CREATE DATABASE school;
+CREATE TABLE student (
+    sid VARCHAR(20),
+    sname VARCHAR(100),
+    uktstatus VARCHAR(15),
+    alamat VARCHAR(100),
+    email VARCHAR(100)
+);
+```
+
+Jika berhasil, maka akan terlihat seperti ini.
+
+<center>
+<img src="assets/konfig-1.png" alt="Konfigurasi" width=500/>
+</center>
+
+Kita juga akan membuat file `.env` untuk mendefinisikan `environment variable` yang diperlukan dengan template sebagai berikut. Jangan lupa untuk mengubah `RDS EndPoint`, `RDS User`, dan `RDS Password` sesuai dengan RDS yang telah kalian buat.
+
+```R
+DB_HOST=<RDS EndPoint>
+DB_USER=<RDS User>
+DB_PORT=5432
+DB_PASSWORD=<RDS Password>
+DB_NAME=school
+```
+
+Dengan menggunakan `nano`, kita dapat menulis file `.env` seperti berikut.
+
+<center>
+<img src="assets/konfig-3.png" alt="Konfigurasi" width=500/>
+</center>
+<center>
+<img src="assets/konfig-2.png" alt="Konfigurasi" width=500/>
+</center>
+
+### Port Forwarding pada NGINX
+
+Sebenarnya, aplikasi di atas sudah bisa dijalankan dengan command `npm start`, maka server akan mendengar pada port 3000. Namun, pada praktiknya, tidak lazim kita membuka port secara custom. Biasanya port yang dibuka untuk akses api ada pada port 80 (http) atau 443 (https). Hal tersebut sesuai dengan aturan `security group` pada instance `webServer` yang hanya menerima koneksi ke port 22 (ssh) dan 80 (http). Oleh karena itu, kita perlu melakukan port forwarding dari port 80 ke port 3000 di mana aplikasi kita berjalan.
+
+1. Buat salinan konfigurasi server Nginx dengan command
+
+```R
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/backup
+```
+
+2. Modifikasi file `/etc/nginx/sites-available/default` dengan menggunakan `nano` menjadi sebagai berikut:
+
+```R
+server {
+    listen 80;
+
+    location / {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://127.0.0.1:3000";
+    }
+}
+```
+
+3. Aktifkan konfigurasi dengan membuat symbolic link di folder `/etc/nginx/sites-enabled` dengan command berikut.
+
+```R
+sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+```
+
+4. Restart Nginx dan jalankan aplikasi
+
+```R
+sudo systemctl restart nginx
+node ./index.js
+```
+
+5. Akses web server pada browser, maka aplikasi kita telah dapat terlihat.
+<center>
+<img src="assets/port-forward.png" alt="Port Forwarding Result" width=500/>
+</center>
+
+### Menjalankan Aplikasi sebagai Layanan dengan Systemd
+
+Sebelumnya, kita perlu secara manual menjalankan aplikasi dengan command `node index.js` atau `npm start`. Namun, kita tidak mungkin dapat menjalankan server setiap saat. Oleh karena itu, kita perlu menjalankan aplikasi di latar belakang sebagai suatu layanan. Dengan demikian, aplikasi pada server dapat tetap berjalan dan dapat diakses kapanpun. Hal ini dapat dilakukan dengan mudah di linux dengan menggunakan `systemd`.
+
+1. Buat systemd file dengan `sudo nano /lib/systemd/system/server.service`, lalu isi sebagai berikut. Jangan lupa untuk mengubah `username` dan `path-to-project` sesuai dengan server masing-masing.
+
+```R
+[Unit]
+Description=Server service
+After=network.target
+
+[Service]
+Type=simple
+User=<username>
+ExecStart=/usr/bin/node <path-to-project>
+Restart=on-failure
+WorkingDirectory=<path-to-project>
+
+[Install]
+WantedBy=multi-user.target
+```
+
+2. Restart daemon dan jalankan service server. Periksa juga apakah layanan server telah berjalan.
+
+```R
+sudo systemctl daemon-reload
+sudo systemctl start server
+sudo systemctl status server
+```
+
+3. Akses kembali public ip. Kalian akan mendapati bahwa server berjalan walaupun kalian tidak mengeksekusi npm start pada root project. Dengan demikian, project kalian sudah berjalan pada background.
