@@ -346,24 +346,26 @@ Pada contoh di bawah, kita membuat NSG untuk subnet public.
 
 #### Virtual Networks (VNet)
 
-Sebelum meluncurkan VM untuk web server dan Azure PostgreSQL Database, kita perlu membuat VNet beserta subnet yang diperlukan. Berikut langkah-langkah membuat VNet:<br>
+Kita perlu membuat sebuah subnet agar Virtual Machine (VM) dan database cloud berada dalam jaringan yang sama, sehingga keduanya bisa saling terhubung dengan aman dan efisien. Dengan subnet ini, komunikasi antara VM dan database lebih cepat, terlindungi dari akses luar, dan memudahkan pengelolaan koneksi jaringan tanpa mengganggu layanan lain di Azure. Berikut langkah-langkahnya:
+1. Masuk ke `Virtual Networks`
+2. Lalu klik `Create`
+3. Pilih `Resource Group` yang telah dibuat sebelumnya, lalu masukkan nama untuk Virtual network yang akan dibuat. Pastikan memilih region yang sama dengan semua resource yang sudah dibuat.
 <img width="1398" height="1148" alt="image" src="https://github.com/user-attachments/assets/b5d0ebe6-58e9-4246-b4d2-a55c71488e79" />
 
-Pada bagian IP addresses, buat 2 subnet untuk public dan private. Tekan add a subnet untuk menambah subnet. Sebelum itu, default subnet yang ada bisa dihapus terlebih dahulu.
+4. Pada bagian `IP addresses`, buat 2 subnet untuk public dan private. Tekan add a subnet untuk menambah subnet. Sebelum itu, default subnet yang ada bisa dihapus terlebih dahulu.
 
 <center>
 <img width="1406" height="382" alt="image" src="https://github.com/user-attachments/assets/24642ac4-ea73-4930-8230-3d5767ed4d18" />
 <img width="1097" height="863" alt="image" src="https://github.com/user-attachments/assets/b1ddeee6-ccd1-4114-8bf4-3bee056bfc8d" />
 <img width="1372" height="477" alt="image" src="https://github.com/user-attachments/assets/175510d4-9eb8-4a0a-addb-dce8be9b9594" />
-
 </center>
 <br>
-Lakukan hal yang sama untuk subnet private. Namun, kita perlu memberikan konfigurasi tambahan pada bagian security dan subnet delegation.<br>
+5. Lakukan hal yang sama untuk subnet private. Namun, kita perlu memberikan konfigurasi tambahan pada bagian security dan subnet delegation.<br>
 <img width="1370" height="821" alt="image" src="https://github.com/user-attachments/assets/ce8b53e9-af90-4e32-befd-e5b3605bb58a" />
 
 <img width="1119" height="159" alt="image" src="https://github.com/user-attachments/assets/6e605c78-33c9-4d7a-aef0-17ab9b5e7210" />
 
-Berikut hasil tampilan ketika VNet dan subnet telah selesai dikonfigurasi:
+6. Berikut hasil tampilan ketika VNet dan subnet telah selesai dikonfigurasi:
 <img width="1108" height="1172" alt="image" src="https://github.com/user-attachments/assets/99391c7a-77f4-4e9a-a6ff-c353ef0a10e7" />
 
 #### Public IP
