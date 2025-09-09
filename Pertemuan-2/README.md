@@ -2,20 +2,21 @@
 
 ## Daftar Isi
 
-1. [Network Service Azure](#network-service-azure)
+- [Network Service Azure](#network-service-azure)
    - [Fondasi Jaringan](#fondasi-jaringan)
    - [Penyeimbangan Beban dan Pengiriman Konten](#penyeimbangan-beban-dan-pengiriman-konten)
    - [Konektivitas Hibrid](#konektivitas-hibrid)
    - [Keamanan Jaringan](#keamanan-jaringan)
    - [Manajemen dan Pemantauan Jaringan](#manajemen-dan-pemantauan-jaringan)
-2. [Membangun Infrastruktur Azure Sederhana](#membangun-infrastruktur-azure-sederhana)
+- [Membangun Infrastruktur Azure Sederhana](#membangun-infrastruktur-azure-sederhana)
    - [Konfigurasi Jaringan](#konfigurasi-jaringan)
    - [Web Server](#web-server)
    - [Database](#database)
-3. [Deploy Aplikasi](deploy-aplikasi)
+- [Deploy Aplikasi](deploy-aplikasi)
    - [Konfigurasi Aplikasi](#konfigurasi-aplikasi)
    - [Port Forwarding pada NGINX](#port-Forwarding-pada-nginx)
    - [Menjalankan Aplikasi sebagai Layanan dengan Systemd](#menjalankan-aplikasi-sebagai-layanan-dengan-systemd)
+
 
 ## Network Service Azure
 
@@ -314,6 +315,20 @@ Struktur infrasturktur dapat lebih jelas dilihat pada ilustrasi berikut:<br>
 
 </center>
 
+### Firewall
+Saat membuat VM, secara default hanya port 22 (SSH) yang diizinkan untuk koneksi masuk. Agar aplikasi web dapat diakses publik, kita perlu membuka port 80 (HTTP) dan 443 (HTTPS). Ikuti langkah-langkah berikut:
+1. Masuk ke dashboard virtual machine yang sudah dibuat
+2. Pilih menu `Networking` -> `Network Settings`
+3. Klik `Create Port Rule` -> `Inbound Port Rule`
+
+<img width="1594" height="390" alt="image" src="https://github.com/user-attachments/assets/e61f29ed-759f-4f23-9aa8-48a3226934d2" />
+
+4. Ubah opsi `Service` menjadi HTTP, lalu isi kolom `Name` dengan http.
+
+<img width="571" height="756" alt="image" src="https://github.com/user-attachments/assets/b88ccd92-8f79-4711-bba2-05c9118e52b1" />
+
+5. Klik `Add` untuk menyimpan aturan firewall.
+
 ### Konfigurasi Jaringan
 
 #### Resource Group
@@ -410,7 +425,6 @@ Pilih menu `add` dan pilih service `SSH`. Berikan nama pada security rule dan te
 
 Setelah mengizinkan port 22 untuk masuk ke VM, kita bisa melihat bahwa di bagian `VM access` sudah berubah menjadi `Port 22 is accessible from source IP(s)`.
 <img width="1319" height="175" alt="image" src="https://github.com/user-attachments/assets/0f7544ca-8b39-42d1-b2eb-7a252fdc5dac" />
-
 
 #### Mengakses VM dengan SSH
 
@@ -629,7 +643,8 @@ Type=simple
 User=<username>
 ExecStart=/usr/bin/node <path-to-project>
 Restart=on-failure
-WorkingDirectory=<path-to-directory>
+
+WorkingDirectory=<path-to-project>
 
 [Install]
 WantedBy=multi-user.target
