@@ -1,4 +1,4 @@
-# Pertemuan 1 LBE NCC 2025
+# Pertemuan 2 LBE NCC 2025
 
 ## Daftar Isi
 
