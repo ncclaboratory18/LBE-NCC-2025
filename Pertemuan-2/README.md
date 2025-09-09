@@ -346,12 +346,12 @@ Pada bagian IP addresses, buat 2 subnet untuk public dan private. Tekan add a su
 <center>
 <img width="1406" height="382" alt="image" src="https://github.com/user-attachments/assets/24642ac4-ea73-4930-8230-3d5767ed4d18" />
 <img width="1097" height="863" alt="image" src="https://github.com/user-attachments/assets/b1ddeee6-ccd1-4114-8bf4-3bee056bfc8d" />
-<img width="1354" height="489" alt="image" src="https://github.com/user-attachments/assets/a0108c8c-184a-40f5-b786-4ccc955bd72c" />
+<img width="1372" height="477" alt="image" src="https://github.com/user-attachments/assets/175510d4-9eb8-4a0a-addb-dce8be9b9594" />
 
 </center>
 <br>
 Lakukan hal yang sama untuk subnet private. Namun, kita perlu memberikan konfigurasi tambahan pada bagian security dan subnet delegation.<br>
-<img width="1363" height="810" alt="image" src="https://github.com/user-attachments/assets/63149b81-e454-4cbc-8375-dba59d1e3211" />
+<img width="1370" height="821" alt="image" src="https://github.com/user-attachments/assets/ce8b53e9-af90-4e32-befd-e5b3605bb58a" />
 
 <img width="1119" height="159" alt="image" src="https://github.com/user-attachments/assets/6e605c78-33c9-4d7a-aef0-17ab9b5e7210" />
 
@@ -473,147 +473,64 @@ Biarkan konfigurasi lainnya tetap secara default dan tekan review + create.
 
 Web server yang telah kita buat perlu berkomunikasi dengan database. Karenanya, kita perlu mengatur security group agar database dapat menerima koneksi postgresql (port 5432) dari web server, begitupun sebaliknya.
 
-Pertama, pergi ke NSG priv lalu pilih `inbound security rules`. Kita perlu menambahkan aturan pada `inbound rule` untuk mengirim dan menerima koneksi postgresql (port 5432) dari/ke web server.
+Pertama, pergi ke NSG priv lalu pilih `inbound security rules`. Kita perlu menambahkan aturan pada `inbound rule` untuk mengirim dan menerima koneksi postgresql (port 5432) dari/ke web server. Berikut tampilan NSG private setelah dilakukan penambahan konfigurasi: <br>
 
 <center>
-<img src="assets/sg-3.png" alt="Security Group" width=500/>
-</center><center>
-<img src="assets/sg-4.png" alt="Security Group" width=500/>
+<img width="1375" height="1286" alt="image" src="https://github.com/user-attachments/assets/511da59b-6e8a-40df-882a-51a2d1dbfb2e" />
 </center>
 
-Kita juga perlu mengubah security group pada web server agar dapat menerima koneksi postgresql seperti di atas.
+Kita juga perlu mengubah security group pada NSG public agar dapat menerima koneksi postgresql seperti di atas.
 
 <center>
-<img src="assets/sg-5.png" alt="Security Group" width=500/>
-</center>
-<center>
-<img src="assets/sg-6.png" alt="Security Group" width=500/>
-</center>
-<center>
-<img src="assets/sg-7.png" alt="Security Group" width=500/>
-</center>
-
-#### Membuat DB Subnet Group
-
-Pada `Amazon RDS > Subnet Groups`, klik `Create DB Subnet Group`
-
-<center>
-<img src="assets/subnet-group-1.png" alt="Subnet Group" width=500/>
-</center>
-
-Pada halaman `create DB Subnet Group`, masukkan nama yang sesuai dan pilih VPC sesuai dengan VPC yang telah dibuat (ncc-vpc).
-
-<center>
-<img src="assets/subnet-group-2.png" alt="Subnet Group" width=500/>
-</center>
-
-Selanjutnya, pilih subnet yang sesuai dengan `private subnet`. Karena dropdown tidak menampilkan nama subnet, kalian bisa mencari id dari `private subnet`.
-
-<center>
-<img src="assets/subnet-group-3.png" alt="Subnet Group" width=500/>
-</center>
-<center>
-<img src="assets/subnet-group-4.png" alt="Subnet Group" width=500/>
-</center>
-
-Klik `create` dan subnet group berhasil dibuat.
-
-<center>
-<img src="assets/subnet-group-5.png" alt="Subnet Group" width=500/>
-</center>
-
-#### Launch RDS
-
-Pertama, akses Amazon RDS dashboard dan pilih menu `Database`. Selanjutnya, klik tombol `Create Database` yang terdapat di kanan atas sebelah `Restore from S3`.
-
-<center>
-<img src="assets/rds-1.png" alt="RDS" width=500/>
-</center>
-
-Pada halaman `Create Database`, pilih metode `Standard Create` dan opsi engine `PostgreSQL` (bukan Aurora postgreSQL compatible).
-
-<center>
-<img src="assets/rds-2.png" alt="RDS" width=500/>
-</center>
-
-Agar mendapatkan konfigurasi yang sesuai dengan ketentuan layanan gratis, pilih `Free Tier` pada menu `Templates`.
-
-<center>
-<img src="assets/rds-3.png" alt="RDS" width=500/>
-</center>
-
-![alt text](image-16.png)
-Masukkan nama instance, username database, dan password.
-
-<center>
-<img src="assets/rds-4.png" alt="RDS" width=500/>
-</center>
-
-Pada bagian `Connectivity`, pilih `Don't connect to an EC2 compute resource`. Selain itu, pilih vpc `lbe-ncc-vpc` dan subnet group `lbe-ncc-db-subnetgroup`
-
-<center>
-<img src="assets/rds-5.png" alt="RDS" width=500/>
-</center>
-
-Pilih `No` pada bagian `public access` dan `db-sg` (security group yang telah dibuat) pada security group.
-
-<center>
-<img src="assets/rds-6.png" alt="RDS" width=500/>
-</center>
-
-Klik `Create Database` dan database berhasil dibuat.
-
-<center>
-<img src="assets/rds-7.png" alt="RDS" width=500/>
+<img width="1356" height="1293" alt="image" src="https://github.com/user-attachments/assets/2101aa7a-241e-4cb3-8a41-46a5e0fee129" />
 </center>
 
 #### Mengakses database dari web server
 
-Karena berada di 1 VPC dan kita telah mengatur security group, maka web server seharusnya dapat mengakses private IP database. Untuk mengakses, kita perlu menginstal postgresql pada web server.
+Karena berada di 1 VNet dan kita telah mengatur security group, maka web server seharusnya dapat mengakses private IP database. Untuk mengakses, kita perlu menginstal postgresql pada web server.
 
 <center>
-<img src="assets/web-server-1.png" alt="Web Server" width=500/>
+<img width="1409" height="194" alt="image" src="https://github.com/user-attachments/assets/ad323220-cb4d-4c79-a056-2996755c2ecf" />
 </center>
 
-Selanjutnya, kita dapat mencoba akses ke database menggunakan `psql` sesuai dengan nama host/endpoint dan portnya.
+Selanjutnya, kita dapat mencoba akses ke database menggunakan `psql` sesuai dengan nama host/endpoint dan portnya. Pertama, masuk ke Azure PostgreSQL database yang telah dibuat, lalu masuk ke menu `connect` dan salin script untuk menghubungkan VM dengan database.
 
 <center>
-<img src="assets/web-server-2.png" alt="Web Server" width=500/>
+<img width="1381" height="1150" alt="image" src="https://github.com/user-attachments/assets/8ec5f1db-6b99-49b0-8998-13303235e854" />
+<img width="1371" height="282" alt="image" src="https://github.com/user-attachments/assets/c735638f-6330-4549-ba14-ec272b349d82" />
 </center>
-<center>
-<img src="assets/web-server-3.png" alt="Web Server" width=500/>
-</center>
-Selamat, anda telah berhasil membuat database di AWS dan mengaksesnya dari ec2.
+Selamat, anda telah berhasil membuat database di Azure dan mengaksesnya dari VM.
+<img width="1821" height="332" alt="image" src="https://github.com/user-attachments/assets/584dcc68-96a9-4db3-8d1f-9a1c695fa0c9" />
+
 
 ## Deploy Aplikasi
 
 Setelah berhasil membangun infrastruktur di AWS, kita akan mencoba melakukan deploy aplikasi. Aplikasi yang akan dideploy merupakan aplikasi CRUD sederhana dan dapat diclone dari https://github.com/arizki787/API-Project.
 
 <center>
-<img src="assets/deply-1.png" alt="Deploy" width=500/>
-</center>
-
-Pindah ke directory `API-Project` dan kita dapat melihat file-file yang terdapat pada direktori.
-
-<center>
-<img src="assets/deply-2.png" alt="Deploy" width=500/>
+<img width="1557" height="304" alt="image" src="https://github.com/user-attachments/assets/a1faced3-6eb6-4688-a88e-444e259ca00f" />
 </center>
 
 ### Konfigurasi Aplikasi
 
-Aplikasi yang akan dideploy merupakan aplikasi nodejs sehingga kita perlu menginstall `nodejs` dan `npm` terlebih dahulu.
+Aplikasi yang akan dideploy merupakan aplikasi nodejs sehingga kita perlu menginstall `nodejs` dan `npm` terlebih dahulu. Jalankan script berikut:
+
+```
+cd API-Project/
+sudo apt install nodejs npm -y
+```
 
 <center>
-<img src="assets/node-1.png" alt="Node Js" width=500/>
-</center>
-<center>
-<img src="assets/node-2.png" alt="Node Js" width=500/>
+<img width="1327" height="195" alt="image" src="https://github.com/user-attachments/assets/2e0b689b-8793-4b4e-9b00-e408414c7141" />
 </center>
 
-Selanjutnya, buat database beserta tabelnya dengan terlebih dahulu mengakses postgresql di RDS. Buat database `school` dan tabel `student` dengan query berikut:
+Selanjutnya, buat database beserta tabelnya dengan terlebih dahulu mengakses postgresql di Azure Database. Buat database `school` dan tabel `student` dengan query berikut:
 
 ```R
 CREATE DATABASE school;
+
+\c school;
+
 CREATE TABLE student (
     sid VARCHAR(20),
     sname VARCHAR(100),
@@ -624,29 +541,36 @@ CREATE TABLE student (
 ```
 
 Jika berhasil, maka akan terlihat seperti ini.
-
 <center>
-<img src="assets/konfig-1.png" alt="Konfigurasi" width=500/>
+   
+<img width="2025" height="898" alt="image" src="https://github.com/user-attachments/assets/f04a1eac-0f56-4fe2-8fdf-cd923df9cb22" />
+
 </center>
 
-Kita juga akan membuat file `.env` untuk mendefinisikan `environment variable` yang diperlukan dengan template sebagai berikut. Jangan lupa untuk mengubah `RDS EndPoint`, `RDS User`, dan `RDS Password` sesuai dengan RDS yang telah kalian buat.
+Kita juga akan membuat file `.env` untuk mendefinisikan `environment variable` yang diperlukan dengan template sebagai berikut. Jangan lupa untuk mengubah `DB EndPoint`, `DB User`, dan `DB Password` sesuai dengan Database yang telah kalian buat.
 
 ```R
-DB_HOST=<RDS EndPoint>
-DB_USER=<RDS User>
+DB_HOST=<DB EndPoint>
+DB_USER=<DB User>
 DB_PORT=5432
-DB_PASSWORD=<RDS Password>
+DB_PASSWORD=<DB Password>
 DB_NAME=school
 ```
 
 Dengan menggunakan `nano`, kita dapat menulis file `.env` seperti berikut.
 
 <center>
-<img src="assets/konfig-3.png" alt="Konfigurasi" width=500/>
+   <img width="1422" height="151" alt="image" src="https://github.com/user-attachments/assets/595acc5b-332e-4e34-aec6-704124a470cb" />
+
+<img width="1419" height="229" alt="image" src="https://github.com/user-attachments/assets/8a30df16-a4cf-4f75-97b3-8bb479b701bc" />
+
 </center>
-<center>
-<img src="assets/konfig-2.png" alt="Konfigurasi" width=500/>
-</center>
+
+Setelah itu, install modul dotenv agar aplikasi Node.js di dalam VM dapat membaca konfigurasi database
+
+```
+npm install dotenv
+```
 
 ### Port Forwarding pada NGINX
 
@@ -687,7 +611,7 @@ node ./index.js
 
 5. Akses web server pada browser, maka aplikasi kita telah dapat terlihat.
 <center>
-<img src="assets/port-forward.png" alt="Port Forwarding Result" width=500/>
+<img width="2872" height="1372" alt="image" src="https://github.com/user-attachments/assets/d47ca755-5a95-42ab-af79-c5f47b007480" />
 </center>
 
 ### Menjalankan Aplikasi sebagai Layanan dengan Systemd
@@ -706,11 +630,14 @@ Type=simple
 User=<username>
 ExecStart=/usr/bin/node <path-to-project>
 Restart=on-failure
-WorkingDirectory=<path-to-project>
+WorkingDirectory=<path-to-directory>
 
 [Install]
 WantedBy=multi-user.target
 ```
+
+<img width="1396" height="561" alt="image" src="https://github.com/user-attachments/assets/7027d98e-cff6-4331-ac26-19ce1c3952c5" />
+
 
 2. Restart daemon dan jalankan service server. Periksa juga apakah layanan server telah berjalan.
 
