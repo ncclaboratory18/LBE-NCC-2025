@@ -84,6 +84,20 @@ systemctl enable nginx
 systemctl start nginx
 ```
 
+### Firewall
+Saat membuat VM, secara default hanya port 22 (SSH) yang diizinkan untuk koneksi masuk. Agar aplikasi web dapat diakses publik, kita perlu membuka port 80 (HTTP) dan 443 (HTTPS). Ikuti langkah-langkah berikut:
+1. Masuk ke dashboard virtual machine yang sudah dibuat
+2. Pilih menu `Networking` -> `Network Settings`
+3. Klik `Create Port Rule` -> `Inbound Port Rule`
+
+<img width="1594" height="390" alt="image" src="https://github.com/user-attachments/assets/e61f29ed-759f-4f23-9aa8-48a3226934d2" />
+
+4. Ubah opsi `Service` menjadi HTTP, lalu isi kolom `Name` dengan http.
+
+<img width="571" height="756" alt="image" src="https://github.com/user-attachments/assets/b88ccd92-8f79-4711-bba2-05c9118e52b1" />
+
+5. Klik `Add` untuk menyimpan aturan firewall.
+
 ### Konfigurasi Jaringan
 
 Kita perlu membuat sebuah subnet agar Virtual Machine (VM) dan database cloud berada dalam jaringan yang sama, sehingga keduanya bisa saling terhubung dengan aman dan efisien. Dengan subnet ini, komunikasi antara VM dan database lebih cepat, terlindungi dari akses luar, dan memudahkan pengelolaan koneksi jaringan tanpa mengganggu layanan lain di Azure. Berikut langkah-langkahnya:
@@ -115,6 +129,9 @@ Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama un
 
 6. Pilih `Review + Create` dan tekan tombol `Create`
 
+## Deploy Aplikasi
+Setelah berhasil membangun infrastruktur di Azure, kita akan mencoba melakukan deploy aplikasi. Aplikasi yang akan dideploy merupakan aplikasi CRUD sederhana dan dapat diclone dari `https://github.com/arizki787/API-Project`.
+
 ### Konfigurasi Skema dan Tabel Database
 
 Pada tahap ini kita akan menyiapkan skema dan tabel-tabel yang diperlukan untuk aplikasi. Ikuti langkah-langkah berikut:
@@ -143,4 +160,28 @@ CREATE TABLE student (
 );
 ```
 
-## Deploy Aplikasi
+### Port Forwarding pada NGINX
+Sebenarnya, aplikasi di atas sudah bisa dijalankan dengan command `npm start`, maka server akan mendengar pada port 3000. Namun, pada praktiknya, tidak lazim kita membuka port secara custom. Biasanya port yang dibuka untuk akses api ada pada port 80 (http) atau 443 (https). Hal tersebut sesuai dengan aturan security group pada instance webServer yang hanya menerima koneksi ke port 22 (ssh) dan 80 (http). Oleh karena itu, kita perlu melakukan port forwarding dari port 80 ke port 3000 di mana aplikasi kita berjalan.
+1. Buat salinan konfigurasi server NGINX dengan command
+```
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/backup
+```
+2. Modifikasi file `/etc/nginx/sites-available/default` dengan menggunakan nano menjadi sebagai berikut:
+```
+server {
+    listen 80;
+
+    location / {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://127.0.0.1:3000";
+    }
+}
+```
+3. Aktifkan konfigurasi dengan membuat symbolic link di folder `/etc/nginx/sites-enabled` dengan command berikut.
+`sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/`
+4. Restart Nginx dan jalankan aplikasi
+```
+sudo systemctl restart nginx
+node ./index.js
+```
