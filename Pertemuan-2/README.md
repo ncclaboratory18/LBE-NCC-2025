@@ -542,8 +542,7 @@ CREATE TABLE student (
 
 Jika berhasil, maka akan terlihat seperti ini.
 <center>
-   
-<img width="2025" height="898" alt="image" src="https://github.com/user-attachments/assets/f04a1eac-0f56-4fe2-8fdf-cd923df9cb22" />
+<img width="2872" height="1372" alt="image" src="https://github.com/user-attachments/assets/6dd3f4da-3ed6-446e-8655-6dd851e20424" />
 
 </center>
 
