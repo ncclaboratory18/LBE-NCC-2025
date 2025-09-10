@@ -402,74 +402,48 @@ Web server merupakan perangkat yang menyediakan konten web pada pengguna melalui
 
 #### Launch VM
 
-<img width="1397" height="1046" alt="image" src="https://github.com/user-attachments/assets/4b83b40f-3863-44d6-96d4-aad0ba3481c9" />
-
-Launch instance VM dapat dilakukan seperti pada pertemuan 1. Masukkan `lbe-ncc-vm` sebagai nama instance dan pilih `Ubuntu Server 24.04 LTS - x64 Gen2` sebagai os image. Untuk availability options pilih `No infrastructure redundancy required` dan security type `Standard` untuk menghemat biaya VM. Biarkan konfigurasi `basics` yang lain secara default.
-
-<center>
-<img width="1388" height="1086" alt="image" src="https://github.com/user-attachments/assets/ecb10ae0-b8b0-42de-bd75-69c2dbd3291f" />
-<img width="1384" height="118" alt="image" src="https://github.com/user-attachments/assets/89bed620-0088-4e91-91f4-4de5d7ad33f2" />
-</center>
-<br>
-
-
-Pada menu `disks`, pilih OS disk type `Standard SSD locally-redundant storage`.
+Buat Virtual Machine dengan langkah-langkah yang sama seperti pada modul sebelumnya. Tambahkan konfigurasi berikut:
+1. Pada menu `disks`, pilih OS disk type `Standard SSD locally-redundant storage`.
+   
 <img width="1382" height="277" alt="image" src="https://github.com/user-attachments/assets/44167479-b67d-42a9-9167-287cd55377e7" />
 
-Setelah itu, pada menu `networking` pilih VNet, Subnet, Public IP, dan NSG yang telah dibuat tadi. 
+3. Setelah itu, pada menu `networking` pilih VNet, Subnet, Public IP, dan NSG yang telah dibuat tadi. 
 <img width="1375" height="859" alt="image" src="https://github.com/user-attachments/assets/0cef7fd9-04ea-4634-861a-06d77bd73698" />
 <img width="1400" height="113" alt="image" src="https://github.com/user-attachments/assets/e9ff4dc9-f855-4cea-acf6-f85b5560ee48" />
 <br>
 
-Biarkan konfigurasi lainnya tetap secara default. Berikut tampilan jika VM telah berhasil dibuat:<br>
+4. Pada menu `Advanced` di bagian Custom data and cloud-init dengan skrip berikut:
+```
+#!/bin/bash
+apt-get update -y
+apt-get install -y nginx postgresql-client-16 nodejs npm
+```
+
+5. Biarkan konfigurasi lainnya tetap secara default. Berikut tampilan jika VM telah berhasil dibuat:<br>
 <img width="2860" height="1011" alt="image" src="https://github.com/user-attachments/assets/85a05e7b-1fcb-4386-95c6-fd977469deaa" />
 
-#### Mengatur Network Security Group
+#### Menjalankan NGINX
 
-Meskipun kita telah membuat VM, kita belum bisa mengakses VM. Terlihat tulisan error yang mengatakan bahwa VM tidak menerima akses dari port 22. <br>
-<img width="1391" height="1221" alt="image" src="https://github.com/user-attachments/assets/2ffec4c9-fd1e-4df5-9710-e2c0c17b9c3f" />
-
-Ini dikarenakan kita belum melakukan konfigurasi pada Network Security Group dari subnet public yang digunakan tempat VM berada. Untuk itu, kita perlu memberikan izin pada port 22 (SSH), 80 (HTTP), dan 443 (HTTPS) pada NSG public, agar VM web server dapat diakses dari public IP.
-
-
-
-Setelah mengizinkan port 22 untuk masuk ke VM, kita bisa melihat bahwa di bagian `VM access` sudah berubah menjadi `Port 22 is accessible from source IP(s)`.
-<img width="1319" height="175" alt="image" src="https://github.com/user-attachments/assets/0f7544ca-8b39-42d1-b2eb-7a252fdc5dac" />
-
-#### Mengakses VM dengan SSH
-
-Setelah mengatur security rule pada Network Security Group, kita sudah dapat mengakses VM dengan menggunakan SSH. SSH (Secure Shell) merupakan salah satu protokol jaringan yang biasa digunakan untuk memberikan `command` pada remote server. Command dasar ssh adalah `ssh username@host`, dengan username merupakan nama pengguna pada server dan host merupakan hostname atau alamat IP dari server. Selain itu, kita perlu juga menambahkan private key dengan memberikan opsi `-i <nama-file>.pem`. 
-
-Berikut cara mengakses VM web server melalui SSH (jangan lupa copy path file `.pem` lalu tuliskan setelah `-i`). <br>
-
-<img width="1832" height="195" alt="image" src="https://github.com/user-attachments/assets/b38135f1-33b0-4264-b36d-6d638847aacb" />
-<img width="1476" height="725" alt="image" src="https://github.com/user-attachments/assets/3e4accc5-81be-4c86-91a6-0f632d9664c3" />
-
-#### Install dan menjalankan NGINX
-
-Meskipun telah membuka port HTTP, kita belum dapat mengakses apapun pada browser.
+Meskipun port HTTP (80) sudah dibuka di Azure, kita tetap tidak bisa mengakses apa-apa karena tidak ada proses yang menjalankan layanan pada port 80. Oleh karena itu kita perlu menjalankan Nginx di VM sudah kita install pada saat VM dibuat. Berikut langkah-langkahnya:
 
 <center>
 <img width="2866" height="1246" alt="image" src="https://github.com/user-attachments/assets/c2acc691-e14b-4eed-aa1c-c9c7cda3e524" />
 </center>
 
-Hal ini dikarenakan belum ada software yang menerima request pada port 80. Karenanya, kita membutuhkan Nginx sebagai web server yang akan menerima request dari pengguna. Untuk mengaktifkannya, kita perlu menginstal terlebih dahulu. Jalankan script berikut pada ubuntu untuk menginstall `nginx`
+1. Kita dapat mengaktifkannya dengan command berikut.
 
 ```
-sudo apt-get update
-sudo apt install nginx
+systemctl enable nginx
+systemctl start nginx
 ```
-<img width="1593" height="413" alt="image" src="https://github.com/user-attachments/assets/72efc01f-bcca-4747-a213-003a215485af" />
 
-Selanjutnya, kita dapat mengaktifkannya dengan command `sudo systemctl start nginx` dan memeriksa status nginx dengan `sudo systemctl status nginx`.
-
+2. Lalu kita dapat mengecek apakah nginx sudah berjalan dengan command berikut
 ```
-sudo systemctl start nginx
-sudo systemctl status nginx
+systemctl status nginx
 ```
 <img width="2311" height="716" alt="image" src="https://github.com/user-attachments/assets/48b05d18-f561-4860-b047-b929159b92a2" />
 
-Sekarang, kita dapat mengakses web pada browser seperti berikut:
+3. Sekarang, kita dapat mengakses web pada browser seperti berikut
 
 <img width="1431" height="694" alt="image" src="https://github.com/user-attachments/assets/ecc3b958-bd57-42d8-aab1-725877e8ae30" />
 
