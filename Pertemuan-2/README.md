@@ -498,28 +498,13 @@ Selamat, anda telah berhasil membuat database di Azure dan mengaksesnya dari VM.
 
 ## Deploy Aplikasi
 
-Setelah berhasil membangun infrastruktur di AWS, kita akan mencoba melakukan deploy aplikasi. Aplikasi yang akan dideploy merupakan aplikasi CRUD sederhana dan dapat diclone dari https://github.com/arizki787/API-Project.
+Setelah berhasil membangun infrastruktur di AWS, kita akan mencoba melakukan deploy aplikasi. Aplikasi yang akan dideploy merupakan aplikasi CRUD sederhana dan dapat diclone dari `https://github.com/arizki787/API-Project`.
 
-<center>
-<img width="1557" height="304" alt="image" src="https://github.com/user-attachments/assets/a1faced3-6eb6-4688-a88e-444e259ca00f" />
-</center>
-
-### Konfigurasi Aplikasi
-
-Aplikasi yang akan dideploy merupakan aplikasi nodejs sehingga kita perlu menginstall `nodejs` dan `npm` terlebih dahulu. Jalankan script berikut:
-
+### Konfigurasi Skema dan Tabel Database
+Pada tahap ini kita akan menyiapkan skema dan tabel-tabel yang diperlukan untuk aplikasi. Ikuti langkah-langkah berikut:
+1. Hubungkan VM utama ke database cloud untuk mengeksekusi perintah SQL
+2. Setelah berhasil terhubung, jalankan perintah SQL berikut untuk membuat database dan tabel:
 ```
-cd API-Project/
-sudo apt install nodejs npm -y
-```
-
-<center>
-<img width="1327" height="195" alt="image" src="https://github.com/user-attachments/assets/2e0b689b-8793-4b4e-9b00-e408414c7141" />
-</center>
-
-Selanjutnya, buat database beserta tabelnya dengan terlebih dahulu mengakses postgresql di Azure Database. Buat database `school` dan tabel `student` dengan query berikut:
-
-```R
 CREATE DATABASE school;
 
 \c school;
@@ -533,11 +518,14 @@ CREATE TABLE student (
 );
 ```
 
-Jika berhasil, maka akan terlihat seperti ini.
-<center>
-<img width="2872" height="1372" alt="image" src="https://github.com/user-attachments/assets/6dd3f4da-3ed6-446e-8655-6dd851e20424" />
+### Konfigurasi Aplikasi
 
-</center>
+Aplikasi yang akan dideploy merupakan aplikasi nodejs sehingga kita perlu menginstall package terlebih dahulu. Jalankan script berikut:
+
+```
+cd API-Project/
+npm install
+```
 
 Kita juga akan membuat file `.env` untuk mendefinisikan `environment variable` yang diperlukan dengan template sebagai berikut. Jangan lupa untuk mengubah `DB EndPoint`, `DB User`, dan `DB Password` sesuai dengan Database yang telah kalian buat.
 
