@@ -546,12 +546,6 @@ Dengan menggunakan `nano`, kita dapat menulis file `.env` seperti berikut.
 
 </center>
 
-Setelah itu, install modul dotenv agar aplikasi Node.js di dalam VM dapat membaca konfigurasi database
-
-```
-npm install dotenv
-```
-
 ### Port Forwarding pada NGINX
 
 Sebenarnya, aplikasi di atas sudah bisa dijalankan dengan command `npm start`, maka server akan mendengar pada port 3000. Namun, pada praktiknya, tidak lazim kita membuka port secara custom. Biasanya port yang dibuka untuk akses api ada pada port 80 (http) atau 443 (https). Hal tersebut sesuai dengan aturan `security group` pada instance `webServer` yang hanya menerima koneksi ke port 22 (ssh) dan 80 (http). Oleh karena itu, kita perlu melakukan port forwarding dari port 80 ke port 3000 di mana aplikasi kita berjalan.
