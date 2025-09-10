@@ -468,38 +468,33 @@ systemctl status nginx
 Sebagian besar aplikasi web membutuhkan database untuk menyimpan data yang dibutuhkan. Pada kali ini, kita akan menggunakan database postgresql pada `Azure Database for PostgreSQL flexible servers`.
 
 #### Launch Azure PostgreSQL Database 
+Berikut adalah langkah langkah untuk membuat database berbasis cloud terutama untuk postgres:
 
-Pilih create `Azure Database for PostgreSQL flexible servers` lalu isi dengan konfigurasi berikut: <br>
+1. Klik `Azure Database for PostgreSQL flexible servers`, lalu pilih `Create`
+2. Isi nama server, region (posisi data center VM, pastikan sama dengan region VM), versi PostgreSQL, dan workload type (pilih Development untuk keperluan belajar). <br>
 <img width="1366" height="1170" alt="image" src="https://github.com/user-attachments/assets/84309c57-7003-4092-ae6f-954fec07d297" />
 
-Pada bagian `Compute + storage`, buka menu `configure server` untuk mengatur spesifikasi penyimpanan database. Pilih compute size dengan tipe `Standard_B1ms (1 vCore, 2 GiB memory, 640 max iops)`. Dengan memilih konfigurasi ini, penggunaan sumber daya jadi lebih efisien sehingga biaya operasional database menjadi lebih rendah. Setelah itu, tekan save untuk menyimpan perubahan.
+3. Pada bagian `Compute + storage`, buka menu `configure server` untuk mengatur spesifikasi penyimpanan database. Pilih compute size dengan tipe `Standard_B1ms (1 vCore, 2 GiB memory, 640 max iops)`. Dengan memilih konfigurasi ini, penggunaan sumber daya jadi lebih efisien sehingga biaya operasional database menjadi lebih rendah. Setelah itu, tekan save untuk menyimpan perubahan.
 <img width="1368" height="764" alt="image" src="https://github.com/user-attachments/assets/eb90f67a-1f8e-4ed1-9f17-21863150acbb" />
 
-Lalu, pada bagian `Authentication`, pilih `PostgreSQL authentication only` dan masukkan username dan password database yang diinginkan.
+4. Selanjutnya untuk autentikasi dapat menggunakan PostgreSQL authentication only (menggunakan username dan password PostgreSQL), Microsoft Entra authentication only (menggunakan identitas Microsoft Entra (Azure AD)) ataupun keduanya, dalam contoh ini akan menggunakan `PostgreSQL authentication only`.
 <img width="1359" height="811" alt="image" src="https://github.com/user-attachments/assets/4b6cb2b3-a170-4f93-a865-2894e26788e4" />
 
-Setelah itu, tekan tombol `next: networking` lalu pilih connectivity method `private access` dan masukkan VNet dan subnet private yang telah dibuat sebelumnya. 
+5. `Pilih Next : Networking >`
+6. Pilih Private access (VNet Integration) sebagai metode koneksi, lalu tentukan Subnet yang telah dibuat pada Virtual Network.
+
 <img width="1361" height="926" alt="image" src="https://github.com/user-attachments/assets/2fabcc67-c7b7-485b-8603-169da77193d4" />
 
-Biarkan konfigurasi lainnya tetap secara default dan tekan review + create. 
+7. Pilih Review + Create dan tekan tombol Create
 
 #### Mengakses database dari web server
 
-Karena berada di 1 VNet dan kita telah mengatur security group, maka web server seharusnya dapat mengakses private IP database. Untuk mengakses, kita perlu menginstal postgresql pada web server.
-
-<center>
-<img width="1409" height="194" alt="image" src="https://github.com/user-attachments/assets/ad323220-cb4d-4c79-a056-2996755c2ecf" />
-</center>
-
-Selanjutnya, kita dapat mencoba akses ke database menggunakan `psql` sesuai dengan nama host/endpoint dan portnya. Pertama, masuk ke Azure PostgreSQL database yang telah dibuat, lalu masuk ke menu `connect` dan salin script untuk menghubungkan VM dengan database.
-
-<center>
-<img width="1381" height="1150" alt="image" src="https://github.com/user-attachments/assets/8ec5f1db-6b99-49b0-8998-13303235e854" />
-<img width="1371" height="282" alt="image" src="https://github.com/user-attachments/assets/c735638f-6330-4549-ba14-ec272b349d82" />
-</center>
+Karena berada di 1 VNet dan kita telah mengatur security group, maka web server seharusnya dapat mengakses private IP database. Untuk mengakses, kita perlu postgresql yang sudah diinstall saat membuat VM. Kita dapat menggunakan perintah berikut untuk menghubungkan VM ke database.
+```
+psql -h <server-name>.postgres.database.azure.com -p 5432 -U <username> <database-name>
+```
 Selamat, anda telah berhasil membuat database di Azure dan mengaksesnya dari VM.
 <img width="1821" height="332" alt="image" src="https://github.com/user-attachments/assets/584dcc68-96a9-4db3-8d1f-9a1c695fa0c9" />
-
 
 ## Deploy Aplikasi
 
