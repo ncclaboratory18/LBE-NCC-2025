@@ -368,13 +368,33 @@ Kita perlu membuat sebuah subnet agar Virtual Machine (VM) dan database cloud be
 6. Berikut hasil tampilan ketika VNet dan subnet telah selesai dikonfigurasi:
 <img width="1108" height="1172" alt="image" src="https://github.com/user-attachments/assets/99391c7a-77f4-4e9a-a6ff-c353ef0a10e7" />
 
+#### Firewall
+Saat membuat sebuah network security group, secara default hanya port 65000 dan 65001 yang diizinkan untuk koneksi masuk. Agar dapat melakukan remote access menggunakan port 22 (SSH) serta memungkinkan aplikasi web diakses publik melalui port 80 (HTTP) dan 443 (HTTPS), kita perlu menambahkan aturan akses. Ikuti langkah-langkah berikut:
+1. Masuk ke `Network security groups`
+2. Masuk ke network security group yang nantinya akan digunakan untuk virtual utama (publik)
+3. Pilih `Settings` -> `Inbound security rules`
+
+<img width="1152" height="832" alt="image" src="https://github.com/user-attachments/assets/797538b1-3a51-45c2-b8d5-d4c0711c5d36" />
+
+4. Klik `add` dan pilih service `SSH`. Berikan nama pada security rule dan tekan `add` untuk menambah rule baru. Lakukan hal yang sama untuk `HTTP` dan `HTTPS`
+<img width="1118" height="761" alt="image" src="https://github.com/user-attachments/assets/4eb24db5-8ff6-45b3-9c41-270f34c7a816" />
+
 #### Public IP
 
-Karena VM di Azure tidak secara otomatis memiliki public IP, kita perlu membuat Public IP secara terpisah untuk VM web server agar dapat diakses dari internet. Pilih resource group utama (lbe-ncc) kemudian berikan nama pada public IP. Jangan lupa untuk memberi nama DNS pada IP sehingga lebih mudah diakses oleh user.<br>
+Karena VM di Azure tidak secara otomatis memiliki public IP, kita perlu membuat Public IP secara terpisah untuk VM web server agar dapat diakses dari internet. Berikut langkah-langkahnya:
+
+1. Masuk ke `Public IP addresses`
+2. Klik `+ Create public IP address`
+3. Pilih resource group utama kemudian berikan nama pada public IP.
 
 <img width="1388" height="1009" alt="image" src="https://github.com/user-attachments/assets/7af50003-6d46-4fc3-a875-2f52e01891ea" />
 <img width="1377" height="702" alt="image" src="https://github.com/user-attachments/assets/1310dd39-4b7b-44c2-b992-c6bc87eb43c5" />
+
+4. Beri nama DNS pada IP sehingga lebih mudah diakses oleh client.<br>
+
 <img width="1364" height="118" alt="image" src="https://github.com/user-attachments/assets/90d23676-5141-432b-9725-de07e0e5c36c" />
+
+5. Setelah itu, tekan tombol `Review + Create`.
 
 ### Web Server
 
@@ -411,12 +431,7 @@ Meskipun kita telah membuat VM, kita belum bisa mengakses VM. Terlihat tulisan e
 
 Ini dikarenakan kita belum melakukan konfigurasi pada Network Security Group dari subnet public yang digunakan tempat VM berada. Untuk itu, kita perlu memberikan izin pada port 22 (SSH), 80 (HTTP), dan 443 (HTTPS) pada NSG public, agar VM web server dapat diakses dari public IP.
 
-Pertama, pergi ke NSG public lalu pilih `inbound security rules`.
 
-<img width="1152" height="832" alt="image" src="https://github.com/user-attachments/assets/797538b1-3a51-45c2-b8d5-d4c0711c5d36" />
-
-Pilih menu `add` dan pilih service `SSH`. Berikan nama pada security rule dan tekan `add` untuk menambah rule baru. Lakukan hal yang sama untuk `HTTP` dan `HTTPS`
-<img width="1118" height="761" alt="image" src="https://github.com/user-attachments/assets/4eb24db5-8ff6-45b3-9c41-270f34c7a816" />
 
 Setelah mengizinkan port 22 untuk masuk ke VM, kita bisa melihat bahwa di bagian `VM access` sudah berubah menjadi `Port 22 is accessible from source IP(s)`.
 <img width="1319" height="175" alt="image" src="https://github.com/user-attachments/assets/0f7544ca-8b39-42d1-b2eb-7a252fdc5dac" />
