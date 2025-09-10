@@ -369,15 +369,31 @@ Kita perlu membuat sebuah subnet agar Virtual Machine (VM) dan database cloud be
 <img width="1108" height="1172" alt="image" src="https://github.com/user-attachments/assets/99391c7a-77f4-4e9a-a6ff-c353ef0a10e7" />
 
 #### Firewall
-Saat membuat sebuah network security group, secara default hanya port 65000 dan 65001 yang diizinkan untuk koneksi masuk. Agar dapat melakukan remote access menggunakan port 22 (SSH) serta memungkinkan aplikasi web diakses publik melalui port 80 (HTTP) dan 443 (HTTPS), kita perlu menambahkan aturan akses. Ikuti langkah-langkah berikut:
+Saat membuat sebuah network security group, secara default hanya port 65000 dan 65001 yang diizinkan untuk koneksi masuk. Agar dapat melakukan remote access menggunakan port 22 (SSH) serta memungkinkan aplikasi web diakses publik melalui port 80 (HTTP) dan 443 (HTTPS), kita perlu menambahkan aturan akses. Kita juga perlu membuka port 5432 agar dapat berkomunikasi dengan database. Ikuti langkah-langkah berikut:
 1. Masuk ke `Network security groups`
 2. Masuk ke network security group yang nantinya akan digunakan untuk virtual utama (publik)
 3. Pilih `Settings` -> `Inbound security rules`
 
 <img width="1152" height="832" alt="image" src="https://github.com/user-attachments/assets/797538b1-3a51-45c2-b8d5-d4c0711c5d36" />
 
-4. Klik `add` dan pilih service `SSH`. Berikan nama pada security rule dan tekan `add` untuk menambah rule baru. Lakukan hal yang sama untuk `HTTP` dan `HTTPS`
+4. Klik `add` dan pilih service `SSH`. Berikan nama pada security rule dan tekan `add` untuk menambah rule baru. Lakukan hal yang sama untuk `HTTP`, `HTTPS`, dan `PostgreSQL`
 <img width="1118" height="761" alt="image" src="https://github.com/user-attachments/assets/4eb24db5-8ff6-45b3-9c41-270f34c7a816" />
+
+5. Pilih `Settings` -> `Outbound security rules`
+6. Klik `add` dan pilih service `PostgreSQL`. Berikan nama pada security rule dan tekan `add` untuk menambah rule baru.
+<center>
+<img width="1356" height="1293" alt="image" src="https://github.com/user-attachments/assets/2101aa7a-241e-4cb3-8a41-46a5e0fee129" />
+</center>
+
+Selain itu kita juga perlu membuat aturan untuk database yang akan kita buat. Ikuti langkah-langkah berikut:
+1. Masuk ke network security group yang nantinya akan digunakan untuk database (privat)
+2. Pilih `Settings` -> `Inbound security rules`
+3. Klik `add` dan pilih service `PostgreSQL`. Berikan nama pada security rule dan tekan `add` untuk menambah rule baru.
+4. Lakukan hal yang sama untuk  `Outbound security rules`
+
+<center>
+<img width="1375" height="1286" alt="image" src="https://github.com/user-attachments/assets/511da59b-6e8a-40df-882a-51a2d1dbfb2e" />
+</center>
 
 #### Public IP
 
@@ -466,22 +482,6 @@ Setelah itu, tekan tombol `next: networking` lalu pilih connectivity method `pri
 <img width="1361" height="926" alt="image" src="https://github.com/user-attachments/assets/2fabcc67-c7b7-485b-8603-169da77193d4" />
 
 Biarkan konfigurasi lainnya tetap secara default dan tekan review + create. 
-
-#### Mengatur Network Security Group
-
-Web server yang telah kita buat perlu berkomunikasi dengan database. Karenanya, kita perlu mengatur security group agar database dapat menerima koneksi postgresql (port 5432) dari web server, begitupun sebaliknya.
-
-Pertama, pergi ke NSG priv lalu pilih `inbound security rules`. Kita perlu menambahkan aturan pada `inbound rule` untuk mengirim dan menerima koneksi postgresql (port 5432) dari/ke web server. Berikut tampilan NSG private setelah dilakukan penambahan konfigurasi: <br>
-
-<center>
-<img width="1375" height="1286" alt="image" src="https://github.com/user-attachments/assets/511da59b-6e8a-40df-882a-51a2d1dbfb2e" />
-</center>
-
-Kita juga perlu mengubah security group pada NSG public agar dapat menerima koneksi postgresql seperti di atas.
-
-<center>
-<img width="1356" height="1293" alt="image" src="https://github.com/user-attachments/assets/2101aa7a-241e-4cb3-8a41-46a5e0fee129" />
-</center>
 
 #### Mengakses database dari web server
 
