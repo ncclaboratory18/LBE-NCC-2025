@@ -114,17 +114,23 @@ Edge Location adalah lokasi jaringan terdistribusi yang berfungsi sebagai titik 
 
 #### Portal Azure
 
+<img src="https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/azure-portal_valprop5?resMode=sharp2&op_usm=1.5,0.65,15,0&wid=2000&qlt=100" alt="Azure Portal" width="600"/>
+
 Portal Azure adalah konsol berbasis web untuk membuat, mengelola, dan memantau semua sumber daya Azure melalui antarmuka grafis. Melalui portal ini, pengguna dapat mengatur database, menambah daya komputasi, memantau biaya, hingga membangun aplikasi dari sederhana hingga kompleks.
 
 #### Azure CLI
 
+<img width="544" height="474" alt="bash-azure-cli-2" src="https://github.com/user-attachments/assets/d9e64c97-f9f8-4952-a628-3951b80022bc" />
+
 Azure Command-Line Interface (CLI) adalah alat lintas platform berbasis terminal untuk mengelola sumber daya Azure. CLI dapat digunakan secara interaktif melalui shell (cmd, Bash, atau lainnya) maupun otomatis dengan menyusun perintah ke dalam skrip untuk menjalankan tugas berulang.
 
 #### Azure Resource Manager (ARM)
+<img width="570" height="300" alt="consistent-management-layer" src="https://github.com/user-attachments/assets/2d1d2284-7835-4d43-86c2-88d9a3a5e22c" />
 
 Azure Resource Manager (ARM) adalah layanan deployment dan manajemen di Azure yang memungkinkan pengguna membuat, memperbarui, dan menghapus resource. ARM juga menyediakan fitur seperti access control, locks, dan tags untuk mengamankan serta mengorganisasi resource setelah deployment.
 
 #### Azure Marketplace
+<img width="816" height="524" alt="browse-apps" src="https://github.com/user-attachments/assets/9fec994c-cbcb-43b7-b8cd-fe15c05a9038" />
 
 Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untuk profesional TI dan pengembang. Melalui portal Azure atau situs web, pengguna dapat menemukan produk dan layanan, seperti konsultasi serta layanan terkelola yang dikategorikan berdasarkan area seperti analitik, jaringan, keamanan, dan database, sehingga memudahkan pencarian solusi sesuai kebutuhan organisasi.
 
