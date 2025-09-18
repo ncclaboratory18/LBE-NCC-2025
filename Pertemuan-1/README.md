@@ -19,6 +19,9 @@
   - [Messaging](#messaging)
   - [Identity and Security](#identity-and-security)
   - [Management](#management)
+- [Hosting Aplikasi di Azure](#hosting-aplikasi-di-azure)
+  - [Opsi Hosting di Azure](#opsi-hosting-di-azure)
+  - [Model Hosting di Azure](#model-hosting-di-azure)  
 - [Membuat Virtual Machine di Azure](#membuat-virtual-machine-di-azure)
   - [Persiapan](#persiapan)
   - [Langkah-langkah Membuat VM](#langkah-langkah-membuat-vm)
@@ -125,7 +128,7 @@ Portal Azure adalah konsol berbasis web untuk membuat, mengelola, dan memantau s
 Azure Command-Line Interface (CLI) adalah alat lintas platform berbasis terminal untuk mengelola sumber daya Azure. CLI dapat digunakan secara interaktif melalui shell (cmd, Bash, atau lainnya) maupun otomatis dengan menyusun perintah ke dalam skrip untuk menjalankan tugas berulang.
 
 #### Azure Resource Manager (ARM)
-<img width="570" height="300" alt="consistent-management-layer" src="https://github.com/user-attachments/assets/2d1d2284-7835-4d43-86c2-88d9a3a5e22c" />
+<img width="570" height="300" alt="consistent--layer" src="https://github.com/user-attachments/assets/2d1d2284-7835-4d43-86c2-88d9a3a5e22c" />
 
 Azure Resource Manager (ARM) adalah layanan deployment dan manajemen di Azure yang memungkinkan pengguna membuat, memperbarui, dan menghapus resource. ARM juga menyediakan fitur seperti access control, locks, dan tags untuk mengamankan serta mengorganisasi resource setelah deployment.
 
@@ -202,6 +205,54 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Azure Monitor        | Solusi monitoring komprehensif untuk mengumpulkan, menganalisis, dan merespons data pemantauan dari lingkungan cloud maupun on-premises pengguna.                         |
 | Application Insights | itur dari Azure Monitor yang menyediakan Application Performance Management (APM) untuk meningkatkan performa, keandalan, dan kualitas aplikasi web yang sedang berjalan. |
+
+## Hosting Aplikasi di Azure
+
+### Opsi Hosting di Azure
+Azure menyediakan berbagai pilihan model hosting yang dapat disesuaikan dengan kebutuhan. Semakin sederhana layanan hosting, semakin mudah dikelola namun kontrol infrastruktur terbatas; sebaliknya, semakin kompleks, semakin besar pula kontrol yang dimiliki.
+<table>
+  <tr>
+    <th style="width:50%">Opsi Sederhana</th>
+    <th style="width:50%">Opsi Kompleks</th>
+  </tr>
+  <tr>
+    <td>
+      Konfigurasi & manajemen minimal, kontrol infrastruktur terbatas.  
+      Biasanya menggunakan pendekatan <b>cloud-native</b> (misalnya container/Dapr)  
+      yang bisa dijalankan lintas penyedia cloud.
+    </td>
+    <td>
+      Lebih banyak konfigurasi & manajemen, dengan kontrol penuh atas infrastruktur.  
+      Umumnya bersifat <b>Azure-native</b>, memanfaatkan layanan, alat,  
+      dan integrasi khusus Azure.
+    </td>
+  </tr>
+</table>
+
+### Model Hosting di Azure
+Azure menyediakan berbagai model hosting aplikasi, mulai dari solusi tanpa kode hingga kontrol penuh atas infrastruktur. Setiap model menawarkan keseimbangan berbeda antara kemudahan penggunaan, fleksibilitas, dan tanggung jawab manajemen.
+
+#### Simplified Hosting
+Solusi ini sepenuhnya dikelola oleh Azure. Pengguna hanya fokus pada kode dan konfigurasi lingkungan, sementara Azure mengurus runtime, infrastruktur, update, dan patch. Pendekatan ini umumnya Azure-native. Contoh layanannya adalah Logic Apps, Power Automate, Azure Static Web Apps, dan Azure Functions.
+
+#### Balanced Hosting
+Solusi ini menyeimbangkan antara kesederhanaan dan kontrol. Pengguna tetap mengelola kode dan konfigurasi, tetapi runtime dan infrastruktur ditangani Azure. Bisa juga membawa container sendiri. Model ini bisa Azure-native maupun Cloud-native. Contoh layanannya adalah Azure App Service, Azure Container Apps, dan Azure Spring Apps.
+
+#### Controlled Hosting
+Solusi ini memberi pengguna kontrol penuh atas infrastruktur. Pengguna bertanggung jawab penuh atas kode, aset, konfigurasi lingkungan, update, dan patch. Pendekatan ini lebih ke Cloud-native. Contoh layanannya adalah Azure Virtual Machines dan Azure Kubernetes Service (AKS).
+
+#### Source Code Hosting
+<img width="1108" height="519" alt="source-code-suggested-compute" src="https://github.com/user-attachments/assets/750d8f0b-75b7-4fac-aa7e-c06601666f52" />
+Model ini ditujukan bagi developer yang baru memulai di Azure. Azure akan memberikan rekomendasi hosting sesuai jenis aplikasi, yaitu no-code/low-code, code, atau container.
+##### No-code / Low-code
+Cocok untuk membangun workflow atau otomatisasi bisnis tanpa banyak kode. Contohnya adalah Logic Apps dan Power Automate / Power Apps.
+##### Code 
+Digunakan ketika developer ingin mengembangkan langsung dengan kode. Contohnya adalah Azure Static Web Apps, Azure Functions, Azure App Service, dan Azure Spring Apps.
+##### Container
+Ditujukan untuk aplikasi berbasis container dengan berbagai tingkat kontrol.
+- Orkestrasi: Azure Kubernetes Service (cloud-native), Azure Service Fabric (Azure-native)
+- Preconfigured hosting: Azure App Service, Azure Spring Apps, Azure Container Apps, Azure Container Instances
+- Manajemen image: Azure Container Registry
 
 ## Membuat Virtual Machine di Azure
 
