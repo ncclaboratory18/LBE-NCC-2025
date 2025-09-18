@@ -22,7 +22,7 @@
 - [Hosting Aplikasi di Azure](#hosting-aplikasi-di-azure)
   - [Opsi Hosting di Azure](#opsi-hosting-di-azure)
   - [Model Hosting di Azure](#model-hosting-di-azure)
-  - [CI/CD Compute](#ci/cd-compute)  
+  - [CI/CD Compute](#cicd-compute)  
 - [Membuat Virtual Machine di Azure](#membuat-virtual-machine-di-azure)
   - [Persiapan](#persiapan)
   - [Langkah-langkah Membuat VM](#langkah-langkah-membuat-vm)
