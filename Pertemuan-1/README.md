@@ -258,7 +258,7 @@ Ditujukan untuk aplikasi berbasis container dengan berbagai tingkat kontrol.
   - Preconfigured hosting: Azure App Service, Azure Spring Apps, Azure Container Apps, Azure Container Instances
   - Manajemen image: Azure Container Registry
 
-#### CI/CD Compute
+### CI/CD Compute
 CI/CD (Continuous Integration / Continuous Deployment) compute adalah layanan komputasi yang digunakan untuk membangun dan mendeploy aplikasi secara otomatis. Azure menyediakan beberapa opsi sesuai kebutuhan integrasi dan fleksibilitas:
 | Layanan               | Deskripsi |
 | ---------------------- | --------- |
