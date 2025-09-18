@@ -21,7 +21,8 @@
   - [Management](#management)
 - [Hosting Aplikasi di Azure](#hosting-aplikasi-di-azure)
   - [Opsi Hosting di Azure](#opsi-hosting-di-azure)
-  - [Model Hosting di Azure](#model-hosting-di-azure)  
+  - [Model Hosting di Azure](#model-hosting-di-azure)
+  - [CI/CD Compute](#ci/cd-compute)  
 - [Membuat Virtual Machine di Azure](#membuat-virtual-machine-di-azure)
   - [Persiapan](#persiapan)
   - [Langkah-langkah Membuat VM](#langkah-langkah-membuat-vm)
@@ -244,15 +245,27 @@ Solusi ini memberi pengguna kontrol penuh atas infrastruktur. Pengguna bertanggu
 #### Source Code Hosting
 <img width="1108" height="519" alt="source-code-suggested-compute" src="https://github.com/user-attachments/assets/750d8f0b-75b7-4fac-aa7e-c06601666f52" />
 Model ini ditujukan bagi developer yang baru memulai di Azure. Azure akan memberikan rekomendasi hosting sesuai jenis aplikasi, yaitu no-code/low-code, code, atau container.
-##### No-code / Low-code
+
+- No-code / Low-code
 Cocok untuk membangun workflow atau otomatisasi bisnis tanpa banyak kode. Contohnya adalah Logic Apps dan Power Automate / Power Apps.
-##### Code 
+
+- Code 
 Digunakan ketika developer ingin mengembangkan langsung dengan kode. Contohnya adalah Azure Static Web Apps, Azure Functions, Azure App Service, dan Azure Spring Apps.
-##### Container
+
+- Container
 Ditujukan untuk aplikasi berbasis container dengan berbagai tingkat kontrol.
-- Orkestrasi: Azure Kubernetes Service (cloud-native), Azure Service Fabric (Azure-native)
-- Preconfigured hosting: Azure App Service, Azure Spring Apps, Azure Container Apps, Azure Container Instances
-- Manajemen image: Azure Container Registry
+  - Orkestrasi: Azure Kubernetes Service (cloud-native), Azure Service Fabric (Azure-native)
+  - Preconfigured hosting: Azure App Service, Azure Spring Apps, Azure Container Apps, Azure Container Instances
+  - Manajemen image: Azure Container Registry
+
+#### CI/CD Compute
+CI/CD (Continuous Integration / Continuous Deployment) compute adalah layanan komputasi yang digunakan untuk membangun dan mendeploy aplikasi secara otomatis. Azure menyediakan beberapa opsi sesuai kebutuhan integrasi dan fleksibilitas:
+| Layanan               | Deskripsi |
+| ---------------------- | --------- |
+| **Azure DevOps**       | Terintegrasi penuh dengan Azure, termasuk autentikasi dan otorisasi untuk hosted agents yang membangun dan mendeploy aplikasi. |
+| **GitHub Actions**     | Build dan deploy aplikasi langsung dari repository GitHub. Mendukung penggunaan **Azure CLI** untuk akses aman ke Azure. |
+| **Azure Virtual Machines** | Menyediakan host untuk sistem CI/CD lain (self-hosted) jika tidak menggunakan DevOps atau GitHub Actions. |
+  
 
 ## Membuat Virtual Machine di Azure
 
