@@ -12,17 +12,15 @@
   - [Edge Locations dan Infrastruktur Azure](#edge-locations-dan-infrastruktur-azure)
   - [Fitur Utama Microsoft Azure](#fitur-utama-microsoft-azure)
 - [Layanan Utama Microsoft Azure](#layanan-utama-microsoft-azure)
-  - [App Hosting and Compute](#app-hosting-and-compute)
-  - [Azure AI services](#azure-ai-services)
-  - [Data](#data)
-  - [Storage](#storage)
-  - [Messaging](#messaging)
-  - [Identity and Security](#identity-and-security)
-  - [Management](#management)
+  - [Core Services](#core-services)
+  - [Supporting Services](#supporting-services)
 - [Hosting Aplikasi di Azure](#hosting-aplikasi-di-azure)
   - [Opsi Hosting di Azure](#opsi-hosting-di-azure)
   - [Model Hosting di Azure](#model-hosting-di-azure)
-  - [CI/CD Compute](#cicd-compute)  
+- [CI/CD di Azure](#cicd-di-azure)
+  - [Konsep Dasar CI/CD](#konsep-dasar-cicd)
+  - [CI/CD Compute](#cicd-compute)
+  - [Ilustrasi Alur CI/CD](#ilustrasi-alur-cicd)
 - [Membuat Virtual Machine di Azure](#membuat-virtual-machine-di-azure)
   - [Persiapan](#persiapan)
   - [Langkah-langkah Membuat VM](#langkah-langkah-membuat-vm)
@@ -140,7 +138,9 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 
 ## Layanan Utama Microsoft Azure
 
-### App Hosting and Compute
+### Core Services
+
+#### App Hosting and Compute
 
 | **Layanan**               | **Deskripsi**                                                                                                                                                                                                                                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -152,20 +152,7 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 | Azure Virtual Machines    | Hosting aplikasi menggunakan virtual machine di Azure ketika membutuhkan kontrol lebih besar atas lingkungan komputasi. Azure VMs menyediakan lingkungan komputasi yang fleksibel dan skalabel untuk Linux maupun Windows.                                                                                                 |
 | Azure Functions           | Platform komputasi serverless untuk membuat potongan kode kecil yang dapat dipicu oleh berbagai jenis event. Contoh penggunaan umum: membangun API serverless atau mengorkestrasi arsitektur berbasis event.                                                                                                               |
 | Azure Spring Apps         | Hosting aplikasi Spring Boot microservice di Azure tanpa perlu perubahan kode. Menyediakan fitur seperti monitoring, manajemen konfigurasi, service discovery, integrasi CI/CD, dan lainnya.                                                                                                                               |
-
-### Azure AI services
-
-| **Layanan**                    | **Deskripsi**                                                                                                                                                |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Azure OpenAI                   | Gunakan model bahasa canggih seperti GPT-3, Codex, dan Embeddings untuk generasi konten, ringkasan, pencarian semantik, dan terjemahan bahasa alami ke kode. |
-| Azure AI Speech                | Mengubah ucapan menjadi teks yang dapat dibaca dan dicari, atau mengubah teks menjadi suara yang terdengar alami untuk antarmuka yang lebih interaktif.      |
-| Azure AI Language              | Memanfaatkan Natural Language Processing (NLP) untuk mengidentifikasi frasa penting dan melakukan analisis sentimen dari teks.                               |
-| Azure AI Translator            | Menerjemahkan lebih dari 100 bahasa dan dialek.                                                                                                              |
-| Azure AI Vision                | Menganalisis konten dalam gambar dan video, seperti objek, wajah, atau teks.                                                                                 |
-| Azure AI Search                | Layanan pencarian informasi skala besar untuk aplikasi pencarian tradisional maupun percakapan, dengan opsi keamanan, AI enrichment, dan vektorisasi.        |
-| Azure AI Document Intelligence | Layanan ekstraksi dokumen yang memahami form dan struktur dokumen, memungkinkan ekstraksi teks dan struktur secara cepat.                                    |
-
-### Data
+#### Data
 
 | **Layanan**                   | **Deskripsi**                                                                                                             |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
@@ -177,14 +164,7 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 | Azure Database for MariaDB    | Layanan database MariaDB berbasis cloud yang sepenuhnya dikelola, menggunakan MariaDB Community Edition.                  |
 | Azure Cache for Redis         | Cache data dan messaging broker yang aman, menyediakan akses data berlatensi rendah dan throughput tinggi untuk aplikasi. |
 
-### Storage
-
-| **Layanan**             | **Deskripsi**                                                                                                                                                                                                    |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Azure Blob Storage      | Memungkinkan aplikasi pengguna menyimpan dan mengambil file di cloud. Layanan ini sangat skalabel untuk menyimpan data dalam jumlah besar, dan data disimpan secara redundan untuk memastikan high availability. |
-| Azure Data Lake Storage | Mendukung analitik big data dengan menyediakan penyimpanan yang skalabel dan hemat biaya untuk data terstruktur, semi-terstruktur, maupun tidak terstruktur.                                                     |
-
-### Messaging
+#### Messaging
 
 | **Layanan**         | **Deskripsi**                                                                                                                                                                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -192,7 +172,28 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 | Azure Event Hubs    | Layanan yang sepenuhnya dikelola untuk menerima dan memproses aliran data besar dari website, aplikasi, atau perangkat.                                                                                                                                 |
 | Azure Queue Storage | Layanan queue sederhana dan andal yang dapat menangani beban kerja besar untuk antrean pesan.                                                                                                                                                           |
 
-### Identity and Security
+#### Storage
+
+| **Layanan**             | **Deskripsi**                                                                                                                                                                                                    |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Azure Blob Storage      | Memungkinkan aplikasi pengguna menyimpan dan mengambil file di cloud. Layanan ini sangat skalabel untuk menyimpan data dalam jumlah besar, dan data disimpan secara redundan untuk memastikan high availability. |
+| Azure Data Lake Storage | Mendukung analitik big data dengan menyediakan penyimpanan yang skalabel dan hemat biaya untuk data terstruktur, semi-terstruktur, maupun tidak terstruktur.                                                     |
+
+### Supporting Services
+
+#### Azure AI services
+
+| **Layanan**                    | **Deskripsi**                                                                                                                                                |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Azure OpenAI                   | Gunakan model bahasa canggih seperti GPT-3, Codex, dan Embeddings untuk generasi konten, ringkasan, pencarian semantik, dan terjemahan bahasa alami ke kode. |
+| Azure AI Speech                | Mengubah ucapan menjadi teks yang dapat dibaca dan dicari, atau mengubah teks menjadi suara yang terdengar alami untuk antarmuka yang lebih interaktif.      |
+| Azure AI Language              | Memanfaatkan Natural Language Processing (NLP) untuk mengidentifikasi frasa penting dan melakukan analisis sentimen dari teks.                               |
+| Azure AI Translator            | Menerjemahkan lebih dari 100 bahasa dan dialek.                                                                                                              |
+| Azure AI Vision                | Menganalisis konten dalam gambar dan video, seperti objek, wajah, atau teks.                                                                                 |
+| Azure AI Search                | Layanan pencarian informasi skala besar untuk aplikasi pencarian tradisional maupun percakapan, dengan opsi keamanan, AI enrichment, dan vektorisasi.        |
+| Azure AI Document Intelligence | Layanan ekstraksi dokumen yang memahami form dan struktur dokumen, memungkinkan ekstraksi teks dan struktur secara cepat.                                    |
+
+#### Identity and Security
 
 | **Layanan**        | **Deskripsi**                                                                                                                                                                    |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -200,7 +201,7 @@ Azure Marketplace adalah toko online yang menyediakan solusi berbasis Azure untu
 | Azure Key Vault    | Menyimpan dan mengakses rahasia aplikasi seperti connection string dan API key dalam vault terenkripsi dengan akses terbatas, sehingga rahasia dan aplikasi pengguna tetap aman. |
 | App Configuration  | Layanan cepat dan skalabel untuk mengelola pengaturan aplikasi dan feature flags secara terpusat.                                                                                |
 
-### Management
+#### Management
 
 | **Layanan**          | **Deskripsi**                                                                                                                                                             |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -258,6 +259,23 @@ Ditujukan untuk aplikasi berbasis container dengan berbagai tingkat kontrol.
   - Preconfigured hosting: Azure App Service, Azure Spring Apps, Azure Container Apps, Azure Container Instances
   - Manajemen image: Azure Container Registry
 
+## CI/CD di Azure
+<img width="3777" height="2859" alt="1f968b06-e00e-4e5e-8c8e-17150bea1054_3777x2859" src="https://github.com/user-attachments/assets/bdeabec7-25b2-4ea2-b4d4-a07ec397a217" />
+
+### Konsep Dasar CI/CD
+#### Continuous Integration (CI)
+CI adalah praktik menggabungkan perubahan kode dari banyak developer ke dalam repository bersama secara sering dan teratur. Setiap kali kode baru di-push, sistem CI akan melakukan berbagai pekerjaan secara otomatis, mulai dari build sampai unit test. Tujuannya adalah mendeteksi bug lebih awal, menjaga kualitas kode, dan mencegah konflik besar ketika kode digabungkan.
+
+#### Continuous Deployment (CD)
+CD adalah kelanjutan dari CI, di mana hasil build yang sudah lolos pengujian langsung dapat dideploy secara otomatis ke environment tertentu. Deployment dapat dilakukan secara bertahap untuk meminimalisasi risiko. Tujuannya adalah mempercepat proses rilis aplikasi, memastikan aplikasi selalu dalam kondisi siap pakai, dan mengurangi intervensi manual.
+
+#### Manfaat Utama CI/CD
+- Kecepatan rilis lebih tinggi: fitur baru bisa cepat tersedia bagi pengguna.
+- Mengurangi error manual: proses otomatis lebih konsisten dibanding deploy manual.
+- Kualitas kode lebih terjamin: bug dapat terdeteksi lebih awal saat build/test otomatis berjalan.
+- Kolaborasi tim lebih lancar: developer tidak perlu menunggu lama untuk integrasi kode.
+- Skalabilitas proses: pipeline CI/CD bisa digunakan untuk aplikasi kecil hingga sistem berskala besar.
+
 ### CI/CD Compute
 CI/CD (Continuous Integration / Continuous Deployment) compute adalah layanan komputasi yang digunakan untuk membangun dan mendeploy aplikasi secara otomatis. Azure menyediakan beberapa opsi sesuai kebutuhan integrasi dan fleksibilitas:
 | Layanan               | Deskripsi |
@@ -265,7 +283,16 @@ CI/CD (Continuous Integration / Continuous Deployment) compute adalah layanan ko
 | **Azure DevOps**       | Terintegrasi penuh dengan Azure, termasuk autentikasi dan otorisasi untuk hosted agents yang membangun dan mendeploy aplikasi. |
 | **GitHub Actions**     | Build dan deploy aplikasi langsung dari repository GitHub. Mendukung penggunaan **Azure CLI** untuk akses aman ke Azure. |
 | **Azure Virtual Machines** | Menyediakan host untuk sistem CI/CD lain (self-hosted) jika tidak menggunakan DevOps atau GitHub Actions. |
-  
+
+### Ilustrasi Alur CI/CD
+Alur CI/CD pada umumnya dapat digambarkan dalam tahapan berikut:
+1. Branching – Developer membuat branch baru dari repository utama untuk mengembangkan fitur atau memperbaiki bug.
+2. Pull Request – Setelah pekerjaan selesai, branch digabungkan melalui pull request untuk memastikan ada proses review.
+3. Build & Test – Sistem CI (misalnya GitHub Actions atau Azure DevOps) secara otomatis membangun aplikasi dan menjalankan pengujian.
+4. Approval – Hasil build dan test akan diverifikasi oleh tim atau sistem approval sebelum rilis.
+5. Deployment – Jika semua tahap lulus, pipeline CD akan melakukan deployment otomatis ke resource Azure (misalnya App Service, VM, atau Kubernetes).
+Proses ini dapat divisualisasikan dengan gambar ilustrasi alur CI/CD lengkap seperti berikut:
+<img width="2159" height="959" alt="iac-github-actions" src="https://github.com/user-attachments/assets/ad222f90-8847-4e32-98e8-5673d2dbfb9b" />
 
 ## Membuat Virtual Machine di Azure
 
