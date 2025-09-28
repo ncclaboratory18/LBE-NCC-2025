@@ -46,7 +46,7 @@ Langkah pertama adalah menyiapkan dan mengkonfigurasi server web untuk frontend.
     ```
   - Clone repository frontend:
     ```bash
-    git clone https://github.com/hamasfaa/crud-lbe-ncc-2025
+    git clone --branch frontend https://github.com/hamasfaa/crud-lbe-ncc-2025
     ```
     > Ganti `[nama-folder]` dengan nama direktori pilihan kalian.
 - **Konfigurasi Nginx**:
@@ -96,7 +96,7 @@ Backend akan di-deploy sebagai fungsi _serverless_ untuk menangani logika bisnis
 
 - **Clone Repository**:
   ```bash
-  git clone https://github.com/hamasfaa/crud-lbe-ncc-2025
+  git clone --branch backend https://github.com/hamasfaa/crud-lbe-ncc-2025
   ```
 - **Lengkapi Kode**: Buka proyek backend dan lengkapi bagian yang ditkaliani dengan `// TODO`.
 - **Deployment ke Azure Functions**:
