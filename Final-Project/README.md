@@ -23,7 +23,13 @@ Aplikasi ini akan memiliki arsitektur sebagai berikut:
 
 Jika kalian ingin melihat contoh aplikasi yang sudah selesai, kalian dapat mengaksesnya melalui tautan berikut:
 
+Aplikasi
+
 `http://fp-lbe-ncc.indonesiacentral.cloudapp.azure.com/`
+
+Dokumentasi API
+
+`https://documenter.getpostman.com/view/31957175/2sB3QDwtP2`
 
 ---
 
